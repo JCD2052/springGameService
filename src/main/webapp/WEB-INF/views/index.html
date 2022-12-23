@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${game.getName()}"/>
+</head>
+<body>
+<br th:text="${game.getName()}">
+<br th:text="${game.getDescription()}">
+<br th:text="${game.getGenre().getGenreName()}">
+<div th:each="platform : ${game.getPlatforms()}">
+    <div th:text="${platform.getPlatformName()}">platform</div>
+</div>
+<br>
+<a th:href="@{/games/{id}/edit(id=${game.getId()})}">Edit game</a>
+<br>
+<form th:method="DELETE" th:action="@{/games/{id}(id=${game.getId()})}">
+    <input type="submit" value="Delete game"/>
+</form>
+
+</body>
+</html>
