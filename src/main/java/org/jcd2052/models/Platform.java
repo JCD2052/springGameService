@@ -1,17 +1,17 @@
 package org.jcd2052.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -19,8 +19,9 @@ import java.util.Set;
 @Entity(name = "platform")
 @ToString(exclude = "games")
 @EqualsAndHashCode(exclude = "games")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "platformId")
 public class Platform {
-    @ManyToMany(mappedBy = "platforms", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "platforms")
     private Set<GameInfo> games;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
