@@ -1,6 +1,5 @@
 package org.jcd2052.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,10 +38,14 @@ public class GameInfo {
     private Set<Platform> platforms;
     @ManyToOne
     @JoinColumn(name = "game_genre_id", referencedColumnName = "genre_id")
-    @JsonBackReference
     private Genre genre;
     @ManyToOne
     @JoinColumn(name = "game_developer_studio_id", referencedColumnName = "studio_id")
-    @JsonBackReference
     private DeveloperStudio developerStudio;
+
+//    @ManyToMany
+//    @JoinTable(name = "game_rating",
+//            joinColumns = @JoinColumn(name = "game_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id"))
+//    private Set<UserInfo> users;
 }

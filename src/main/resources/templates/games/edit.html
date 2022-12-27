@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit game</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/games/{id}(id=${game.getId()})}" th:object="${game}">
+    <div th:replace="games/fragments/base_game_fragment.html" id="base-form"></div>
+    <input type="submit" value="Edit game"/>
+</form>
+</body>
+</html>

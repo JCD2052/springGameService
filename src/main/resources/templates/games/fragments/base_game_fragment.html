@@ -1,22 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add game</title>
-</head>
-<body>
-<form th:method="POST" th:action="@{/games}" th:object="${game}">
+<div>
     <label for="name">Enter game name:</label>
     <input id="name" type="text" th:field="*{name}">
-    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error
-    </div>
     <hr>
     <br>
     <label for="description">Enter game description:</label>
     <input id="description" type="text" th:field="*{description}">
-    <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
-        Description Error
-    </div>
     <hr>
     <br>
     <label for="releaseYear">Enter game release year:</label>
@@ -27,7 +15,7 @@
     <hr>
     <br>
     <label for="genre">Select game genre:</label>
-    <select id="genre" th:object="${genre}" th:field="*{genreId}">
+    <select id="genre" th:field="*{genre}">
         <option th:each="genre: ${genres}" th:value="${genre.getGenreId()}"
                 th:text="${genre.getGenreName()}"/>
     </select>
@@ -37,20 +25,19 @@
     <hr>
     <br>
     <label for="studio">Select game studio:</label>
-    <select id="studio" th:object="${developer}" th:field="*{studioId}">
+    <select id="studio" th:field="*{developerStudio}">
         <option th:each="developer: ${developers}" th:value="${developer.getStudioId()}"
-                th:text="${developer.getStudioName()}"/>
+                th:text="${developer.getStudioName()}"
+        />
     </select>
     <hr>
     <br>
     <label for="platform">Select platform:</label>
-    <select id="platform" th:object="${platform}" th:field="*{platformId}">
-        <option th:each="platform: ${platforms}" th:value="${platform.getPlatformId()}"
-                th:text="${platform.getPlatformName()}"/>
-    </select>
+    <input id="platform" type="checkbox" name="platforms" th:field="*{platforms}"
+           th:each="platform : ${platforms}"
+           th:text="${platform.getPlatformName()}"
+           th:value="${platform.getPlatformId()}"
+    />
     <hr>
     <br>
-    <input type="submit" value="Add new game"/>
-</form>
-</body>
-</html>
+</div>
