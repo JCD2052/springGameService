@@ -1,12 +1,12 @@
 package org.jcd2052.repositories.games;
 
-import org.jcd2052.models.Platform;
+import org.jcd2052.models.GameInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface PlatformRepository extends JpaRepository<Platform, Integer> {
-    Optional<Platform> findPlatformByPlatformName(String platformName);
+public interface GameInfoRepository extends JpaRepository<GameInfo, Integer> {
+    Optional<GameInfo> findGameInfoByGameName(String gameName);
 }

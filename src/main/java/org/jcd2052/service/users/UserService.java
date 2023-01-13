@@ -12,10 +12,4 @@ public class UserService extends BaseService<UserInfo> {
     protected UserService(UserRepository repository) {
         super(repository);
     }
-
-    @Override
-    protected void updateById(UserInfo entityToBeUpdated, UserInfo entityWithUpdates) {
-        entityToBeUpdated.setUsername(entityWithUpdates.getUsername());
-        entityToBeUpdated.setPassword(entityWithUpdates.getPassword());
-    }
 }

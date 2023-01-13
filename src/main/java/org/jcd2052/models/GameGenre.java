@@ -10,28 +10,30 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "platform")
-public class Platform {
+@Table(name = "game_genre")
+public class GameGenre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "platform_id", nullable = false)
+    @Column(name = "genre_id", nullable = false)
     private Integer id;
 
     @NotNull
-    @Column(name = "platform_name", nullable = false, length = Integer.MAX_VALUE)
-    private String platformName;
+    @Column(name = "genre_name", nullable = false, length = Integer.MAX_VALUE)
+    private String genreName;
 
-    @OneToMany(mappedBy = "platform")
+    @OneToMany(mappedBy = "gameGenre")
     @ToString.Exclude
     @JsonBackReference
-    private Set<Game> games;
+    private Set<GameInfo> gameInfos;
 }

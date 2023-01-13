@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class BaseService<T> {
-    private final JpaRepository<T, Integer> repository;
+    protected final JpaRepository<T, Integer> repository;
 
     protected BaseService(JpaRepository<T, Integer> repository) {
         this.repository = repository;
@@ -16,24 +16,19 @@ public abstract class BaseService<T> {
         return new HashSet<>(repository.findAll());
     }
 
-    public T getById(int id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Couldn't find entity with id " + id));
-    }
-
     public void save(T entity) {
         repository.save(entity);
     }
 
-    public void updateById(int id, T entityWithUpdates) {
-        T entityToBeUpdated = getById(id);
-        updateById(entityToBeUpdated, entityWithUpdates);
-        repository.save(entityToBeUpdated);
+    public void saveAll(Set<T> entities) {
+        repository.saveAllAndFlush(entities);
     }
 
     public void deleteById(int id) {
         repository.deleteById(id);
     }
 
-    protected abstract void updateById(T entityToBeUpdated, T entityWithUpdates);
+    public void deleteAll(Set<T> entities) {
+        repository.deleteAllInBatch(entities);
+    }
 }

@@ -1,16 +1,16 @@
 package org.jcd2052.service.games;
 
-import org.jcd2052.models.DeveloperStudio;
-import org.jcd2052.repositories.games.DeveloperStudioRepository;
+import org.jcd2052.models.GameGenre;
+import org.jcd2052.repositories.games.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 @Component
-public class DeveloperStudioService extends BaseService<DeveloperStudio> {
+public class GameGenreService extends BaseService<GameGenre> {
     @Autowired
-    protected DeveloperStudioService(DeveloperStudioRepository repository) {
+    protected GameGenreService(GenreRepository repository) {
         super(repository);
     }
 }

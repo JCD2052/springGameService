@@ -1,51 +1,82 @@
 package org.jcd2052.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.jcd2052.dto.GameInfoDto;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity(name = "game_info")
+@Getter
+@Setter
+@ToString
+@Entity
 @NoArgsConstructor
-@Data
-@EqualsAndHashCode(exclude = "platforms")
+@Table(name = "base_game_info")
 public class GameInfo {
     @Id
-    @Column(name = "game_id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "game_id", nullable = false)
     private int id;
-    @Column(name = "game_name")
-    private String name;
-    @Column(name = "game_description")
-    private String description;
-    //TODO shout be date with format mm.dd.YYYY.
-    @Column(name = "game_release_date")
-    private int releaseYear;
-    @ManyToMany
-    @JoinTable(name = "Game",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "platform_id"))
-    private Set<Platform> platforms;
-    @ManyToOne
-    @JoinColumn(name = "game_genre_id", referencedColumnName = "genre_id")
-    private Genre genre;
-    @ManyToOne
-    @JoinColumn(name = "game_developer_studio_id", referencedColumnName = "studio_id")
-    private DeveloperStudio developerStudio;
 
-//    @ManyToMany
-//    @JoinTable(name = "game_rating",
-//            joinColumns = @JoinColumn(name = "game_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id"))
-//    private Set<UserInfo> users;
+    @NotNull
+    @Column(name = "game_name", nullable = false, length = Integer.MAX_VALUE)
+    private String gameName;
+
+    @NotNull
+    @Column(name = "game_description", nullable = false, length = Integer.MAX_VALUE)
+    private String gameDescription;
+
+    @NotNull
+    @Column(name = "game_release_date", nullable = false)
+    private int gameReleaseDate;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "game_genre_id", nullable = false)
+    @ToString.Exclude
+    @JsonManagedReference
+    private GameGenre gameGenre;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "game_developer_studio_id", nullable = false)
+    @ToString.Exclude
+    @JsonManagedReference
+    private DeveloperStudio gameDeveloperStudio;
+
+    @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ToString.Exclude
+    @JsonBackReference
+    private Set<Game> games;
+
+    public GameInfo(GameInfoDto gameInfoDto) {
+        this.gameName = gameInfoDto.getName();
+        this.gameDescription = gameInfoDto.getDescription();
+        this.gameReleaseDate = gameInfoDto.getReleaseYear();
+        this.gameGenre = gameInfoDto.getGameGenre();
+        this.gameDeveloperStudio = gameInfoDto.getDeveloperStudio();
+    }
+
+    public Set<Platform> getAllPlatforms() {
+        return games.stream()
+                .map(Game::getPlatform)
+                .collect(Collectors.toSet());
+    }
 }

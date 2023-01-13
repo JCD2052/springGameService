@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 @Component
 @Service
 public class PlatformService extends BaseService<Platform> {
-
     @Autowired
     protected PlatformService(PlatformRepository repository) {
         super(repository);
     }
 
-    @Override
-    protected void updateById(Platform entityToBeUpdated, Platform entityWithUpdates) {
-        entityToBeUpdated.setPlatformName(entityWithUpdates.getPlatformName());
+    public Platform getPlatformByName(String platformName) {
+        return ((PlatformRepository) repository).findPlatformByPlatformName(platformName)
+                .orElseThrow(() -> new RuntimeException("Couldn't find platform " + platformName));
     }
 }

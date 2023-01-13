@@ -1,3 +1,6 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
 <div>
     <label for="name">Enter game name:</label>
     <input id="name" type="text" th:field="*{name}">
@@ -25,7 +28,7 @@
     <hr>
     <br>
     <label for="studio">Select game studio:</label>
-    <select id="studio" th:field="*{developerStudio}">
+    <select id="studio" th:field="*{}">
         <option th:each="developer: ${developers}" th:value="${developer.getStudioId()}"
                 th:text="${developer.getStudioName()}"
         />

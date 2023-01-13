@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${gameInfo.getGameName().concat(' Game Page')}">Game Title</title>
+</head>
+<body>
+<br th:text="${gameInfo.getGameName()}">
+<br th:text="${gameInfo.getGameDescription()}">
+<br th:text="${gameInfo.getGameGenre().getGenreName()}">
+<br th:text="${gameInfo.getGameDeveloperStudio().getStudioName()}">
+<div th:if="${gameInfo.getGames().size() > 1}">
+    <div th:each="game : ${gameInfo.getGames()}">
+        <a th:href="@{/games/{platformName}/{gameName}
+        (platformName=${game.getPlatform().getPlatformName()},
+        gameName=${game.getGameInfo().getGameName()})}"
+           th:text="${game.getPlatform().getPlatformName()}">
+        </a>
+    </div>
+</div>
+</body>
+</html>

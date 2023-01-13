@@ -1,34 +1,37 @@
 package org.jcd2052.models;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Set;
 
-@NoArgsConstructor
-@Entity(name = "developer_studio")
-@Data
-@ToString(exclude = "games")
-@EqualsAndHashCode(exclude = "games")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "studioId")
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "developer_studio")
 public class DeveloperStudio {
-    @OneToMany(mappedBy = "developerStudio")
-    private Set<GameInfo> games;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studio_id")
-    private int studioId;
-    @Column(name = "studio_name")
+    @Column(name = "studio_id", nullable = false)
+    private Integer id;
+
+    @NotNull
+    @Column(name = "studio_name", nullable = false, length = Integer.MAX_VALUE)
     private String studioName;
+
+    @OneToMany(mappedBy = "gameDeveloperStudio")
+    @ToString.Exclude
+    @JsonBackReference
+    private Set<GameInfo> gameInfos;
 }

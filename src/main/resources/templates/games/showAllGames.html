@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="ISO-8859-1">
+    <title>Main Page</title>
+    <style>
+        header {
+            font-size: 25px
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="w3-xlarge">Top Games</h1>
+<h1>Some text</h1>
+<div th:each="game: ${games}">
+    <div class="w3-panel w3-center w3-opacity" style="padding:128px 16px">
+        <a th:href="@{/games/{platformName}/{gameName}
+          (platformName=${game.getPlatform().getPlatformName()},
+          gameName=${game.getGameInfo().getGameName()})}"
+           th:text="|${game.getAverageRating()} ${game.getGameInfo().getGameName()} -
+           ${game.getPlatform().getPlatformName()}|" class="w3-bar-item w3-button">
+        </a>
+    </div>
+</div>
+</body>
+</html>
