@@ -1,6 +1,7 @@
 package org.jcd2052.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -74,6 +75,7 @@ public class GameInfo {
         this.gameDeveloperStudio = gameInfoDto.getDeveloperStudio();
     }
 
+   @JsonIgnore
     public Set<Platform> getAllPlatforms() {
         return games.stream()
                 .map(Game::getPlatform)

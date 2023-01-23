@@ -4,6 +4,8 @@ import org.jcd2052.models.Game;
 import org.jcd2052.repositories.games.GameRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class GameService extends BaseService<Game> {
     protected GameService(GameRepository repository) {
@@ -18,7 +20,17 @@ public class GameService extends BaseService<Game> {
                                 gameName, platformName)));
     }
 
-//    public List<Game> getAllGamesOrderedByAverageRating() {
-//        return ((GameRepository) repository).findGameByRating();
-//    }
+    public Double getGameRating(String gameName, String platformName) {
+        return ((GameRepository) repository).getGameRating(gameName, platformName)
+                .orElse(0.0);
+    }
+
+    public Set<Game> findAllGamesByGenreName(String genreName) {
+        return ((GameRepository) repository).findAllByGameInfoGameGenreGenreName(genreName);
+    }
+
+    public Set<Game> findAllByGameInfoGameDeveloperStudioStudioName(String developerStudioName) {
+        return ((GameRepository) repository)
+                .findAllByGameInfoGameDeveloperStudioStudioName(developerStudioName);
+    }
 }
