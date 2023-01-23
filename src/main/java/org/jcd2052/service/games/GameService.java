@@ -1,5 +1,6 @@
 package org.jcd2052.service.games;
 
+import org.jcd2052.exceptionhandler.exception.GameNotFoundException;
 import org.jcd2052.models.Game;
 import org.jcd2052.repositories.games.GameRepository;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,7 @@ public class GameService extends BaseService<Game> {
     public Game getGameByPlatformAndName(String platformName, String gameName) {
         return ((GameRepository) repository)
                 .findGameByPlatformPlatformNameAndGameInfoGameName(platformName, gameName)
-                .orElseThrow(() ->
-                        new RuntimeException(String.format("Couldn't find game %s on platform %s ",
-                                gameName, platformName)));
+                .orElseThrow(() -> new GameNotFoundException(gameName, platformName));
     }
 
     public Double getGameRating(String gameName, String platformName) {
