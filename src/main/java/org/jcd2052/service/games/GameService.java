@@ -19,17 +19,20 @@ public class GameService extends BaseService<Game> {
                 .orElseThrow(() -> new GameNotFoundException(gameName, platformName));
     }
 
-    public Double getGameRating(String gameName, String platformName) {
-        return ((GameRepository) repository).getGameRating(gameName, platformName)
-                .orElse(0.0);
-    }
-
     public Set<Game> findAllGamesByGenreName(String genreName) {
         return ((GameRepository) repository).findAllByGameInfoGameGenreGenreName(genreName);
+    }
+
+    public Set<Game> findAllGamesByPlatformName(String platformName) {
+        return ((GameRepository) repository).findAllByPlatformPlatformName(platformName);
     }
 
     public Set<Game> findAllByGameInfoGameDeveloperStudioStudioName(String developerStudioName) {
         return ((GameRepository) repository)
                 .findAllByGameInfoGameDeveloperStudioStudioName(developerStudioName);
+    }
+
+    public Set<Game> findAllByGameInfoGameReleaseDate(int releaseData) {
+        return ((GameRepository) repository).findAllByGameInfoGameReleaseDate(releaseData);
     }
 }

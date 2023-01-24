@@ -67,13 +67,13 @@ public class GameInfo {
     @JsonBackReference
     private Set<Game> games;
 
-    public GameInfo(GameInfoDto gameInfoDto) {
-        this.gameName = gameInfoDto.getName();
-        this.gameDescription = gameInfoDto.getDescription();
-        this.gameReleaseDate = gameInfoDto.getReleaseYear();
-        this.gameGenre = gameInfoDto.getGameGenre();
-        this.gameDeveloperStudio = gameInfoDto.getDeveloperStudio();
-    }
+//    public GameInfo(GameInfoDto gameInfoDto) {
+//        this.gameName = gameInfoDto.getName();
+//        this.gameDescription = gameInfoDto.getDescription();
+//        this.gameReleaseDate = gameInfoDto.getReleaseYear();
+//        this.gameGenre = gameInfoDto.getGameGenre();
+//        this.gameDeveloperStudio = gameInfoDto.getDeveloperStudio();
+//    }
 
    @JsonIgnore
     public Set<Platform> getAllPlatforms() {

@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +20,7 @@ import lombok.ToString;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -51,9 +51,6 @@ public class Game {
     @JsonManagedReference
     private Set<GameRating> gameRatings;
 
-    @Transient
-    private double averageRating;
-
     public Game(GameInfo gameInfo, Platform platform) {
         this.gameInfo = gameInfo;
         this.platform = platform;
@@ -63,5 +60,12 @@ public class Game {
         return gameInfo.getAllPlatforms().stream()
                 .filter(gamePlatform -> !gamePlatform.equals(this.platform))
                 .collect(Collectors.toSet());
+    }
+
+    public double getAverageRating() {
+        return gameRatings.stream()
+                .flatMapToInt(gameRating -> IntStream.of(gameRating.getRating()))
+                .average()
+                .orElse(0.0);
     }
 }

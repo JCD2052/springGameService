@@ -26,7 +26,7 @@ import lombok.ToString;
 public class GameRating {
     @Id
     @Column(name = "record_id", nullable = false)
-    private Integer id;
+    private int id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -46,4 +46,7 @@ public class GameRating {
     @Column(name = "rating", nullable = false)
     private int rating;
 
+    @NotNull
+    @Column(name = "comment", nullable = false)
+    private String comment;
 }
