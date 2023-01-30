@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -35,13 +36,13 @@ public class Game {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "base_game_info_id", nullable = false)
     @JsonManagedReference
     private GameInfo gameInfo;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_id", nullable = false)
     @JsonManagedReference
     private Platform platform;
@@ -49,7 +50,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
     @ToString.Exclude
     @JsonManagedReference
-    private Set<GameRating> gameRatings;
+    private Set<GameRating> gameRatings = new HashSet<>();
 
     public Game(GameInfo gameInfo, Platform platform) {
         this.gameInfo = gameInfo;

@@ -20,15 +20,8 @@ public abstract class BaseService<T> {
         repository.save(entity);
     }
 
-    public void saveAll(Set<T> entities) {
-        repository.saveAllAndFlush(entities);
+    public void deleteEntity(T entity) {
+        repository.delete(entity);
     }
 
-    public void deleteById(int id) {
-        repository.deleteById(id);
-    }
-
-    public void deleteAll(Set<T> entities) {
-        repository.deleteAllInBatch(entities);
-    }
 }

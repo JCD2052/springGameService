@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.jcd2052.dto.GameInfoDto;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ public class GameInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id", nullable = false)
-    private int id;
+    private Integer id;
 
     @NotNull
     @Column(name = "game_name", nullable = false, length = Integer.MAX_VALUE)
@@ -62,23 +61,36 @@ public class GameInfo {
     @JsonManagedReference
     private DeveloperStudio gameDeveloperStudio;
 
-    @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @ToString.Exclude
     @JsonBackReference
     private Set<Game> games;
 
-//    public GameInfo(GameInfoDto gameInfoDto) {
-//        this.gameName = gameInfoDto.getName();
-//        this.gameDescription = gameInfoDto.getDescription();
-//        this.gameReleaseDate = gameInfoDto.getReleaseYear();
-//        this.gameGenre = gameInfoDto.getGameGenre();
-//        this.gameDeveloperStudio = gameInfoDto.getDeveloperStudio();
-//    }
+    public GameInfo(String gameName, String gameDescription, int gameReleaseDate,
+                    GameGenre gameGenre, DeveloperStudio gameDeveloperStudio) {
+        this.gameName = gameName;
+        this.gameDescription = gameDescription;
+        this.gameReleaseDate = gameReleaseDate;
+        this.gameGenre = gameGenre;
+        this.gameDeveloperStudio = gameDeveloperStudio;
+    }
 
-   @JsonIgnore
+    @JsonIgnore
     public Set<Platform> getAllPlatforms() {
         return games.stream()
                 .map(Game::getPlatform)
                 .collect(Collectors.toSet());
+    }
+
+    public void setGames(Set<Game> games) {
+        if (this.games == null) {
+            this.games = games;
+        } else if (this.games != games) {
+            this.games.clear();
+            if (games != null) {
+                this.games.addAll(games);
+            }
+        }
     }
 }

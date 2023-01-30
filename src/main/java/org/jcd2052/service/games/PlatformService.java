@@ -15,7 +15,7 @@ public class PlatformService extends BaseService<Platform> {
         super(repository);
     }
 
-    public Platform getPlatformByName(String platformName) {
+    public Platform findPlatformByName(String platformName) {
         return ((PlatformRepository) repository).findPlatformByPlatformName(platformName)
                 .orElseThrow(() -> new PlatformNotFoundException(platformName));
     }

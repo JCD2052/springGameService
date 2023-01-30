@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -34,6 +35,6 @@ public class GameGenre {
 
     @OneToMany(mappedBy = "gameGenre")
     @ToString.Exclude
-    @JsonBackReference
-    private Set<GameInfo> gameInfos;
+    @JsonBackReference(value = "genreGameInfos")
+    private Set<GameInfo> gameInfos = new HashSet<>();
 }

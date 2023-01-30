@@ -32,6 +32,6 @@ public class DeveloperStudio {
 
     @OneToMany(mappedBy = "gameDeveloperStudio")
     @ToString.Exclude
-    @JsonBackReference
+    @JsonBackReference(value = "developerGameInfos")
     private Set<GameInfo> gameInfos;
 }

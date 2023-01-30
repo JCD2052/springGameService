@@ -3,11 +3,10 @@ package org.jcd2052.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.jcd2052.models.DeveloperStudio;
-import org.jcd2052.models.GameGenre;
-import org.jcd2052.models.Platform;
+import org.jcd2052.models.GameInfo;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @ToString
@@ -16,7 +15,20 @@ public class GameInfoDto {
     private String name;
     private String gameDescription;
     private int gameReleaseDate;
-    private GameGenre gameGenre;
-    private DeveloperStudio gameDeveloperStudio;
-    private Set<Platform> otherPlatforms;
+    private GameGenreDto gameGenre;
+    private DeveloperStudioDto gameDeveloperStudio;
+    private Set<PlatformDto> platforms;
+
+    public GameInfoDto(GameInfo gameInfo) {
+        this.name = gameInfo.getGameName();
+        this.gameDescription = gameInfo.getGameDescription();
+        this.gameReleaseDate = gameInfo.getGameReleaseDate();
+        this.gameGenre = new GameGenreDto(gameInfo.getGameGenre().getGenreName());
+        this.gameDeveloperStudio = new DeveloperStudioDto(gameInfo.getGameDeveloperStudio()
+                .getStudioName());
+        this.platforms = gameInfo.getAllPlatforms()
+                .stream()
+                .map(platform -> new PlatformDto(platform.getPlatformName()))
+                .collect(Collectors.toSet());
+    }
 }

@@ -32,14 +32,14 @@ public class GameRating {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "game_id", nullable = false)
     @ToString.Exclude
-    @JsonBackReference
+    @JsonBackReference(value = "gameRatingGame")
     private Game game;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
-    @JsonBackReference
+    @JsonBackReference(value = "gameRatingUser")
     private UserInfo user;
 
     @NotNull
