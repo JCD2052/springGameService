@@ -1,6 +1,6 @@
 package org.jcd2052.service.games;
 
-import org.jcd2052.exceptionhandler.exception.GameNotFoundException;
+import org.jcd2052.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.jcd2052.models.Game;
 import org.jcd2052.repositories.games.GameRepository;
 import org.springframework.stereotype.Service;
@@ -35,4 +35,5 @@ public class GameService extends BaseService<Game> {
     public Set<Game> findAllByGameInfoGameReleaseDate(int releaseData) {
         return ((GameRepository) repository).findAllByGameInfoGameReleaseDate(releaseData);
     }
+
 }

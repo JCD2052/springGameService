@@ -1,6 +1,6 @@
 package org.jcd2052.service.games;
 
-import org.jcd2052.exceptionhandler.exception.GameGenreNotFoundException;
+import org.jcd2052.repsonses.exceptionhandler.exception.GameGenreNotFoundException;
 import org.jcd2052.models.GameGenre;
 import org.jcd2052.repositories.games.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;

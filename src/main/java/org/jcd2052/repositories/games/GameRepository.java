@@ -9,8 +9,7 @@ import java.util.Set;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
-    Optional<Game> findGameByPlatformPlatformNameAndGameInfoGameName(String platformName,
-                                                                     String gameName);
+    Optional<Game> findGameByPlatformPlatformNameAndGameInfoGameName(String platformName, String gameName);
 
     Set<Game> findAllByGameInfoGameGenreGenreName(String genreName);
 
@@ -19,5 +18,4 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     Set<Game> findAllByPlatformPlatformName(String platformName);
 
     Set<Game> findAllByGameInfoGameReleaseDate(int releaseData);
-
 }

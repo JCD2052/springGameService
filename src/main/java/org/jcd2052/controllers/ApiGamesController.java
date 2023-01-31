@@ -3,10 +3,12 @@ package org.jcd2052.controllers;
 import org.jcd2052.dto.GameDto;
 import org.jcd2052.dto.GameInfoDto;
 import org.jcd2052.dto.PlatformDto;
-import org.jcd2052.exceptionhandler.exception.GameNotFoundException;
-import org.jcd2052.exceptionhandler.exception.PlatformNotFoundException;
-import org.jcd2052.exceptionhandler.response.GameNotFoundResponse;
-import org.jcd2052.exceptionhandler.response.PlatformNotFoundResponse;
+import org.jcd2052.repsonses.BaseResponse;
+import org.jcd2052.repsonses.DeleteEntityResponse;
+import org.jcd2052.repsonses.exceptionhandler.exception.GameNotFoundException;
+import org.jcd2052.repsonses.exceptionhandler.exception.PlatformNotFoundException;
+import org.jcd2052.repsonses.exceptionhandler.response.GameNotFoundResponse;
+import org.jcd2052.repsonses.exceptionhandler.response.PlatformNotFoundResponse;
 import org.jcd2052.models.DeveloperStudio;
 import org.jcd2052.models.Game;
 import org.jcd2052.models.GameGenre;
@@ -17,11 +19,11 @@ import org.jcd2052.service.games.GameGenreService;
 import org.jcd2052.service.games.GameInfoService;
 import org.jcd2052.service.games.GameService;
 import org.jcd2052.service.games.PlatformService;
+import org.jcd2052.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,15 +63,14 @@ public class ApiGamesController {
         this.gameInfoService = gameInfoService;
     }
 
-    @PostMapping // should be with response entity
-    public Set<Game> addGame(@RequestBody GameInfoDto gameInfoDto) {
-        return createGameFromGameInfoDto(gameInfoDto);
+    @PostMapping
+    public ResponseEntity<BaseResponse> addGame(@RequestBody GameInfoDto gameInfoDto) {
+        return Utils.createResponse(createGameFromGameInfoDto(gameInfoDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping(ENDPOINT_WITH_PLATFORM_AND_GAME_NAME)
-    @Transactional
-    public HttpStatus deleteGame(@PathVariable String gameName,
-                                 @PathVariable String platformName) {
+    public ResponseEntity<DeleteEntityResponse> deleteGame(@PathVariable String gameName,
+                                                           @PathVariable String platformName) {
         Game gameToDelete = gameService.getGameByPlatformAndName(platformName, gameName);
         GameInfo gameInfo = gameToDelete.getGameInfo();
         Set<Game> games = gameInfo.getGames();
@@ -78,37 +78,36 @@ public class ApiGamesController {
         if (games.isEmpty()) {
             gameInfoService.deleteEntity(gameInfo);
         }
-        return HttpStatus.OK;
+        return new ResponseEntity<>(new DeleteEntityResponse(gameName), HttpStatus.OK);
     }
 
-    @PatchMapping("/{gameName}")// should be with response entity
-    public GameInfoDto updateGame(@PathVariable String gameName,
-                                  @RequestBody GameInfoDto gameInfoDto) {
+    @PatchMapping("/{gameName}")
+    public ResponseEntity<BaseResponse> updateGame(@PathVariable String gameName,
+                                                   @RequestBody GameInfoDto gameInfoDto) {
         GameInfo gameInfo = findAndUpdateGameInfo(gameName, gameInfoDto);
-
         Set<Game> gamesFromResponse = gameInfoDto.getPlatforms().stream()
                 .map(platform -> new Game(gameInfo, platformService
                         .findPlatformByName(platform.getPlatformName())))
                 .collect(Collectors.toSet());
-
-        Set<Game> gamesToSave = findNewAndExisted(gameInfo.getGames(), gamesFromResponse);
+        Set<Game> gamesToSave = Utils.findNewAndExisted(gameInfo.getGames(), gamesFromResponse);
         if (!gamesToSave.isEmpty()) {
             gameInfo.setGames(gamesToSave);
-            gameInfoService.save(gameInfo);
         }
-        return new GameInfoDto(gameInfo);
+        gameInfoService.save(gameInfo);
+        return Utils.createResponse(new GameInfoDto(gameInfo), HttpStatus.OK);
     }
 
     @GetMapping
-    public Set<GameDto> getAllGames() {
-        return convertGameCollectionToDto(gameService.getAll());
+    public ResponseEntity<BaseResponse> getAllGames() {
+        return Utils.createResponse(convertGameCollectionToDto(gameService.getAll()),
+                HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_WITH_PLATFORM_AND_GAME_NAME)
-    public GameDto getGameByNameAndPlatform(@PathVariable String gameName,
-                                            @PathVariable String platformName) {
+    public ResponseEntity<BaseResponse> getGameByNameAndPlatform(@PathVariable String gameName,
+                                                                 @PathVariable String platformName) {
         Game game = gameService.getGameByPlatformAndName(platformName, gameName);
-        return convertGameToGameDto(game);
+        return Utils.createResponse(convertGameToGameDto(game), HttpStatus.OK);
     }
 
     @GetMapping("/platforms/{platformName}")
@@ -135,16 +134,14 @@ public class ApiGamesController {
     @ExceptionHandler
     private ResponseEntity<GameNotFoundResponse> handleGameNotFoundException(
             GameNotFoundException exception) {
-        GameNotFoundResponse response = new GameNotFoundResponse(exception.getMessage(),
-                System.currentTimeMillis());
+        GameNotFoundResponse response = new GameNotFoundResponse(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<PlatformNotFoundResponse> handlePlatformNotFoundException(
             PlatformNotFoundException exception) {
-        PlatformNotFoundResponse response = new PlatformNotFoundResponse(exception.getMessage(),
-                System.currentTimeMillis());
+        PlatformNotFoundResponse response = new PlatformNotFoundResponse(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -202,21 +199,5 @@ public class ApiGamesController {
         gameInfo.setGameGenre(genre);
         gameInfo.setGameDeveloperStudio(developerStudio);
         return gameInfo;
-    }
-
-    private static Set<Game> findNewAndExisted(Set<Game> savedGames, Set<Game> newGames) {
-        Set<Game> result = new HashSet<>();
-        for (Game newGame : newGames) {
-            if (savedGames.stream().map(Game::getPlatform)
-                    .noneMatch(platform -> platform.equals(newGame.getPlatform()))) {
-                result.add(newGame);
-            }
-            for (Game savedGame : savedGames) {
-                if (newGame.getPlatform().equals(savedGame.getPlatform())) {
-                    result.add(savedGame);
-                }
-            }
-        }
-        return result;
     }
 }

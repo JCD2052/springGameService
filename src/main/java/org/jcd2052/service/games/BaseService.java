@@ -23,5 +23,4 @@ public abstract class BaseService<T> {
     public void deleteEntity(T entity) {
         repository.delete(entity);
     }
-
 }

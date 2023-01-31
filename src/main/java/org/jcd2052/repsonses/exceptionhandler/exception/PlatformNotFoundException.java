@@ -1,4 +1,4 @@
-package org.jcd2052.exceptionhandler.exception;
+package org.jcd2052.repsonses.exceptionhandler.exception;
 
 public class PlatformNotFoundException extends RuntimeException {
     public PlatformNotFoundException(String platformName) {
