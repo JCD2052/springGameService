@@ -110,27 +110,6 @@ public class ApiGamesController {
         return Utils.createResponse(convertGameToGameDto(game), HttpStatus.OK);
     }
 
-    @GetMapping("/platforms/{platformName}")
-    public Set<GameDto> getAllGamesByPlatform(@PathVariable String platformName) {
-        return convertGameCollectionToDto(gameService.findAllGamesByPlatformName(platformName));
-    }
-
-    @GetMapping("genres/{genreName}")
-    public Set<GameDto> getAllGamesByGenre(@PathVariable String genreName) {
-        return convertGameCollectionToDto(gameService.findAllGamesByGenreName(genreName));
-    }
-
-    @GetMapping("releaseDate/{year}")
-    public Set<GameDto> getAllGamesByYear(@PathVariable int year) {
-        return convertGameCollectionToDto(gameService.findAllByGameInfoGameReleaseDate(year));
-    }
-
-    @GetMapping("developerStudios/{developerStudio}")
-    public Set<GameDto> getAllGamesByDeveloperStudio(@PathVariable String developerStudio) {
-        return convertGameCollectionToDto(gameService
-                .findAllByGameInfoGameDeveloperStudioStudioName(developerStudio));
-    }
-
     @ExceptionHandler
     private ResponseEntity<GameNotFoundResponse> handleGameNotFoundException(
             GameNotFoundException exception) {

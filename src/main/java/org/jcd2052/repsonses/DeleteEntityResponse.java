@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.ToString;
 
 public class DeleteEntityResponse extends BaseResponse {
-
     @AllArgsConstructor
     @ToString
     @Data
