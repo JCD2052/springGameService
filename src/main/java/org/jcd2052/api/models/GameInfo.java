@@ -1,8 +1,6 @@
 package org.jcd2052.api.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,18 +47,15 @@ public class GameInfo {
 
     @ManyToOne
     @JoinColumn(name = "game_genre_id")
-    @ToString.Exclude
     private GameGenre gameGenre;
 
     @ManyToOne
     @JoinColumn(name = "game_developer_studio_id")
-    @ToString.Exclude
     private DeveloperStudio gameDeveloperStudio;
 
     @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @ToString.Exclude
-    @JsonBackReference
     private Set<Game> games = new HashSet<>();
 
     public GameInfo(String gameName, String gameDescription, int gameReleaseDate,
@@ -72,7 +67,6 @@ public class GameInfo {
         this.gameDeveloperStudio = gameDeveloperStudio;
     }
 
-    @JsonIgnore
     public Set<Platform> getAllPlatforms() {
         return games.stream()
                 .map(Game::getPlatform)

@@ -14,8 +14,8 @@ public class GameRestService extends BaseRestService {
         return Arrays.asList(getResponse(Game[].class));
     }
 
-    public GameDto getGame(String gameName, String platformName) {
-        return getResponse(String.join("/", platformName, gameName), (GameDto.class));
+    public Game getGame(String gameName, String platformName) {
+        return getResponse(String.join("/", platformName, gameName), (Game.class));
     }
 
     public List<GameDto> addGames(GameInfoDto gameInfoDto) {

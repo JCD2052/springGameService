@@ -48,7 +48,6 @@ public class Game {
     private Platform platform;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
-    @ToString.Exclude
     private Set<GameRating> gameRatings = new HashSet<>();
 
     public Game(GameInfo gameInfo, Platform platform) {
