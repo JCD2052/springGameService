@@ -1,6 +1,5 @@
 package org.jcd2052.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +16,5 @@ public class GameDto {
     private GameInfoDto gameInfo;
     private PlatformDto platform;
     private double averageRating;
-    @JsonManagedReference
     private Set<GameRatingDto> gameRatings = new HashSet<>();
 }

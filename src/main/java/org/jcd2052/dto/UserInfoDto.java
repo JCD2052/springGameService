@@ -15,6 +15,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserInfoDto {
     private String userName;
-    @JsonManagedReference
+    @JsonManagedReference("userGameRatings")
     private Set<GameRatingDto> gameRatings = new HashSet<>();
 }

@@ -8,12 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -24,28 +22,14 @@ import java.util.Set;
 public class Platform {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "platform_id", nullable = false)
+    @Column(name = "platform_id")
     private Integer id;
 
-    @NotNull
-    @Column(name = "platform_name", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "platform_name")
     private String platformName;
 
     @OneToMany(mappedBy = "platform")
     @ToString.Exclude
-    @JsonBackReference
+    @JsonBackReference("gamePlatform")
     private Set<Game> games;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Platform platform = (Platform) o;
-        return id.equals(platform.id) && platformName.equals(platform.platformName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, platformName);
-    }
 }

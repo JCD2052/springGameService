@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,11 +25,10 @@ import java.util.Set;
 public class GameGenre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "genre_id", nullable = false)
+    @Column(name = "genre_id")
     private Integer id;
 
-    @NotNull
-    @Column(name = "genre_name", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "genre_name")
     private String genreName;
 
     @OneToMany(mappedBy = "gameGenre")

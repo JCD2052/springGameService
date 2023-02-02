@@ -23,15 +23,55 @@ public abstract class BaseRestService {
                         .build());
     }
 
-    protected <T> T getResponse(Method method, String uri, Class<T> responseClass) {
+    private <T> T getBaseResponse(Method method, String uri, Class<T> responseClass) {
         return createRequest()
                 .request(method, uri)
                 .jsonPath()
                 .getObject(RESPONSE_TAG, responseClass);
     }
 
-    protected <T> T getResponse(Method method, Class<T> responseClass) {
-        return getResponse(method, "", responseClass);
+    private <T> T getBaseResponse(Method method, Class<T> responseClass) {
+        return getBaseResponse(method, "", responseClass);
+    }
+
+    protected <T> T getResponse(String uri, Class<T> responseClass) {
+        return getBaseResponse(Method.GET, uri, responseClass);
+    }
+
+    protected <T> T getResponse(Class<T> responseClass) {
+        return getBaseResponse(Method.GET, responseClass);
+    }
+
+    protected <T> T postResponse(Object body, String uri, Class<T> responseClass) {
+        return createRequest()
+                .body(body)
+                .post("")
+                .jsonPath()
+                .getObject(RESPONSE_TAG, responseClass);
+    }
+
+    protected <T> T postResponse(Object body, Class<T> responseClass) {
+        return postResponse(body, "", responseClass);
+    }
+
+    protected <T> T patchResponse(Object body, String uri, Class<T> responseClass) {
+        return createRequest()
+                .body(body)
+                .patch(uri)
+                .jsonPath()
+                .getObject(RESPONSE_TAG, responseClass);
+    }
+
+    protected <T> T patchResponse(Object body, Class<T> responseClass) {
+        return patchResponse(body, "", responseClass);
+    }
+
+    protected <T> T deleteResponse(String uri, Class<T> responseClass) {
+        return getBaseResponse(Method.DELETE, uri, responseClass);
+    }
+
+    protected <T> T deleteResponse(Class<T> responseClass) {
+        return getBaseResponse(Method.DELETE, responseClass);
     }
 
     protected abstract Endpoint getBasePath();

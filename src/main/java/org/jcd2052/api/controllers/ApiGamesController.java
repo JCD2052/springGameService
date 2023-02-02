@@ -1,8 +1,6 @@
 package org.jcd2052.api.controllers;
 
-import org.jcd2052.dto.GameDto;
 import org.jcd2052.dto.GameInfoDto;
-import org.jcd2052.dto.PlatformDto;
 import org.jcd2052.api.models.DeveloperStudio;
 import org.jcd2052.api.models.Game;
 import org.jcd2052.api.models.GameGenre;
@@ -19,7 +17,6 @@ import org.jcd2052.api.repsonses.exceptionhandler.response.GameNotFoundResponse;
 import org.jcd2052.api.repsonses.exceptionhandler.response.PlatformNotFoundResponse;
 import org.jcd2052.api.models.Platform;
 import org.jcd2052.api.service.games.GameService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,19 +39,17 @@ import java.util.stream.Collectors;
 public class ApiGamesController {
     private static final String ENDPOINT_WITH_PLATFORM_AND_GAME_NAME = "/{platformName}/{gameName}";
     private final GameService gameService;
-    private final ModelMapper modelMapper;
     private final PlatformService platformService;
     private final GameGenreService genreService;
     private final DeveloperStudioService developerStudioService;
     private final GameInfoService gameInfoService;
 
     @Autowired
-    public ApiGamesController(GameService gameService, ModelMapper modelMapper,
-                              PlatformService platformService, GameGenreService genreService,
+    public ApiGamesController(GameService gameService, PlatformService platformService,
+                              GameGenreService genreService,
                               DeveloperStudioService developerStudioService,
                               GameInfoService gameInfoService) {
         this.gameService = gameService;
-        this.modelMapper = modelMapper;
         this.platformService = platformService;
         this.genreService = genreService;
         this.developerStudioService = developerStudioService;
@@ -64,7 +58,8 @@ public class ApiGamesController {
 
     @PostMapping
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameInfoDto gameInfoDto) {
-        return Utils.createResponse(createGameFromGameInfoDto(gameInfoDto), HttpStatus.CREATED);
+        return Utils.createResponse(createGameFromGameInfoDto(gameInfoDto),
+                HttpStatus.CREATED);
     }
 
     @DeleteMapping(ENDPOINT_WITH_PLATFORM_AND_GAME_NAME)
@@ -74,6 +69,7 @@ public class ApiGamesController {
         GameInfo gameInfo = gameToDelete.getGameInfo();
         Set<Game> games = gameInfo.getGames();
         games.remove(gameToDelete);
+        gameInfoService.save(gameInfo);
         if (games.isEmpty()) {
             gameInfoService.deleteEntity(gameInfo);
         }
@@ -94,20 +90,19 @@ public class ApiGamesController {
             gameInfo.setGames(gamesToSave);
         }
         gameInfoService.save(gameInfo);
-        return Utils.createResponse(new GameInfoDto(gameInfo), HttpStatus.OK);
+        return Utils.createResponse(gameInfo, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAllGames() {
-        return Utils.createResponse(convertGameCollectionToDto(gameService.getAll()),
-                HttpStatus.OK);
+        return Utils.createResponse(gameService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_WITH_PLATFORM_AND_GAME_NAME)
     public ResponseEntity<BaseResponse> getGame(@PathVariable String gameName,
                                                 @PathVariable String platformName) {
         Game game = gameService.getGameByPlatformAndName(platformName, gameName);
-        return Utils.createResponse(convertGameToGameDto(game), HttpStatus.OK);
+        return Utils.createResponse(game, HttpStatus.OK);
     }
 
     @ExceptionHandler
@@ -122,23 +117,6 @@ public class ApiGamesController {
             PlatformNotFoundException exception) {
         PlatformNotFoundResponse response = new PlatformNotFoundResponse(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    private GameDto convertGameToGameDto(Game game) {
-        GameDto dto = modelMapper.map(game, GameDto.class);
-        dto.setAverageRating(game.getAverageRating());
-        Set<PlatformDto> platforms = game.getOtherPlatforms()
-                .stream()
-                .map(platform -> new PlatformDto(platform.getPlatformName()))
-                .collect(Collectors.toSet());
-        dto.getGameInfo().setPlatforms(platforms);
-        return dto;
-    }
-
-    private Set<GameDto> convertGameCollectionToDto(Collection<Game> games) {
-        return games.stream()
-                .map(this::convertGameToGameDto)
-                .collect(Collectors.toSet());
     }
 
     private Set<Game> createGameFromGameInfoDto(GameInfoDto gameInfoDto) {

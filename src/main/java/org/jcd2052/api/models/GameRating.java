@@ -1,8 +1,6 @@
 package org.jcd2052.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,32 +18,27 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "game_rating", schema = "public")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Table(name = "game_rating")
 public class GameRating {
     @Id
-    @Column(name = "record_id", nullable = false)
-    private int id;
+    @Column(name = "record_id")
+    private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "game_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
     @ToString.Exclude
-    @JsonBackReference
+    @JsonBackReference("gameRating")
     private Game game;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonBackReference
     private UserInfo user;
 
-    @NotNull
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating")
     private int rating;
 
-    @NotNull
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment")
     private String comment;
 }

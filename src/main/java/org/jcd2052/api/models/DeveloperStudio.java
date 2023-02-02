@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,11 +22,10 @@ import java.util.Set;
 public class DeveloperStudio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studio_id", nullable = false)
+    @Column(name = "studio_id")
     private Integer id;
 
-    @NotNull
-    @Column(name = "studio_name", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "studio_name")
     private String studioName;
 
     @OneToMany(mappedBy = "gameDeveloperStudio")

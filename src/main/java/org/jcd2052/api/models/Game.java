@@ -1,6 +1,8 @@
 package org.jcd2052.api.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,27 +30,25 @@ import java.util.stream.IntStream;
 @NoArgsConstructor
 @Entity
 @Table(name = "game")
+@JsonIdentityInfo(scope = Game.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "base_game_info_id", nullable = false)
-    @JsonManagedReference
+    @JoinColumn(name = "base_game_info_id")
     private GameInfo gameInfo;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_id", nullable = false)
-    @JsonManagedReference
+    @JoinColumn(name = "platform_id")
     private Platform platform;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
     @ToString.Exclude
-    @JsonManagedReference
     private Set<GameRating> gameRatings = new HashSet<>();
 
     public Game(GameInfo gameInfo, Platform platform) {

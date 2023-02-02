@@ -1,8 +1,9 @@
 package org.jcd2052.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,12 +15,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,43 +30,38 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @Table(name = "base_game_info")
+@JsonIdentityInfo(scope = GameInfo.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class GameInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id", nullable = false)
+    @Column(name = "game_id")
     private Integer id;
 
-    @NotNull
-    @Column(name = "game_name", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "game_name")
     private String gameName;
 
-    @NotNull
-    @Column(name = "game_description", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "game_description")
     private String gameDescription;
 
-    @NotNull
-    @Column(name = "game_release_date", nullable = false)
+    @Column(name = "game_release_date")
     private int gameReleaseDate;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "game_genre_id", nullable = false)
+    @JoinColumn(name = "game_genre_id")
     @ToString.Exclude
-    @JsonManagedReference
     private GameGenre gameGenre;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "game_developer_studio_id", nullable = false)
+    @JoinColumn(name = "game_developer_studio_id")
     @ToString.Exclude
-    @JsonManagedReference
     private DeveloperStudio gameDeveloperStudio;
 
     @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @ToString.Exclude
     @JsonBackReference
-    private Set<Game> games;
+    private Set<Game> games = new HashSet<>();
 
     public GameInfo(String gameName, String gameDescription, int gameReleaseDate,
                     GameGenre gameGenre, DeveloperStudio gameDeveloperStudio) {
