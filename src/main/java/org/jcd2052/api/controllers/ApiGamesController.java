@@ -1,8 +1,8 @@
 package org.jcd2052.api.controllers;
 
-import org.jcd2052.api.dto.GameDto;
-import org.jcd2052.api.dto.GameInfoDto;
-import org.jcd2052.api.dto.PlatformDto;
+import org.jcd2052.dto.GameDto;
+import org.jcd2052.dto.GameInfoDto;
+import org.jcd2052.dto.PlatformDto;
 import org.jcd2052.api.models.DeveloperStudio;
 import org.jcd2052.api.models.Game;
 import org.jcd2052.api.models.GameGenre;

@@ -1,4 +1,4 @@
-package org.jcd2052.api.dto;
+package org.jcd2052.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -35,6 +35,6 @@ public class GameGenre {
 
     @OneToMany(mappedBy = "gameGenre")
     @ToString.Exclude
-    @JsonBackReference(value = "genreGameInfos")
+    @JsonBackReference
     private Set<GameInfo> gameInfos = new HashSet<>();
 }

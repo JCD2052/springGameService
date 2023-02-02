@@ -33,7 +33,7 @@ public class Platform {
 
     @OneToMany(mappedBy = "platform")
     @ToString.Exclude
-    @JsonBackReference(value = "platformGames")
+    @JsonBackReference
     private Set<Game> games;
 
     @Override

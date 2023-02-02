@@ -1,4 +1,4 @@
-package org.jcd2052.api.dto;
+package org.jcd2052.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class GameGenreDto {
-    private String genreName;
+public class PlatformDto {
+    private String platformName;
 }

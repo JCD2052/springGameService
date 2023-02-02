@@ -41,6 +41,6 @@ public class UserInfo {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @ToString.Exclude
-    @JsonManagedReference(value = "userGameRatings")
+    @JsonManagedReference
     private Set<GameRating> gameRatings;
 }
