@@ -1,6 +1,6 @@
 package org.jcd2052.api.utils;
 
-import org.jcd2052.api.models.Game;
+import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

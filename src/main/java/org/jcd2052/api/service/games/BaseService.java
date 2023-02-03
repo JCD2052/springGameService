@@ -1,7 +1,5 @@
 package org.jcd2052.api.service.games;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.HashSet;
@@ -14,7 +12,6 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    @Fetch(FetchMode.SELECT)
     public Set<T> getAll() {
         return new HashSet<>(repository.findAll());
     }

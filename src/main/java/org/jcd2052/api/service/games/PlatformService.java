@@ -1,7 +1,7 @@
 package org.jcd2052.api.service.games;
 
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
-import org.jcd2052.api.models.Platform;
+import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.repositories.games.PlatformRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,6 @@
-package org.jcd2052.api.models;
+package org.jcd2052.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
@@ -56,6 +57,7 @@ public class GameInfo {
     @OneToMany(mappedBy = "gameInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @ToString.Exclude
+    @JsonBackReference
     private Set<Game> games = new HashSet<>();
 
     public GameInfo(String gameName, String gameDescription, int gameReleaseDate,

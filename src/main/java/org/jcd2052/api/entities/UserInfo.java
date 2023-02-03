@@ -1,4 +1,4 @@
-package org.jcd2052.api.models;
+package org.jcd2052.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;

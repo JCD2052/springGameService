@@ -1,25 +1,17 @@
 package org.jcd2052;
 
-import org.jcd2052.api.models.Game;
-import org.jcd2052.dto.DeveloperStudioDto;
-import org.jcd2052.dto.GameGenreDto;
-import org.jcd2052.dto.GameInfoDto;
-import org.jcd2052.dto.PlatformDto;
+import org.jcd2052.api.entities.Game;
+import org.jcd2052.dto.GameDto;
 import org.jcd2052.restclient.service.GameRestService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
         GameRestService gameRestService = new GameRestService();
-        List<Game> games = gameRestService.getAllGames();
-        games.forEach(game -> {
-            System.out.println(game.getGameInfo().getAllPlatforms());
-            System.out.println(game.getOtherPlatforms());
-            System.out.println(game.getGameInfo().getGames());
-        });
+        List<GameDto> games = gameRestService.getAllGames();
+        System.out.println(games);
+
 
 //        Game game = gameRestService.getGame("my new game test",
 //                "Playstation 3");

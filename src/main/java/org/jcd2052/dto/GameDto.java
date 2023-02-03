@@ -1,5 +1,6 @@
 package org.jcd2052.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameDto {
     private GameInfoDto gameInfo;
     private PlatformDto platform;

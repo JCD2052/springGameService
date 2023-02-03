@@ -1,10 +1,10 @@
 package org.jcd2052.api.controllers;
 
 import org.jcd2052.dto.GameInfoDto;
-import org.jcd2052.api.models.DeveloperStudio;
-import org.jcd2052.api.models.Game;
-import org.jcd2052.api.models.GameGenre;
-import org.jcd2052.api.models.GameInfo;
+import org.jcd2052.api.entities.DeveloperStudio;
+import org.jcd2052.api.entities.Game;
+import org.jcd2052.api.entities.GameGenre;
+import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
 import org.jcd2052.api.service.games.DeveloperStudioService;
@@ -15,7 +15,7 @@ import org.jcd2052.api.utils.Utils;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.exceptionhandler.response.GameNotFoundResponse;
 import org.jcd2052.api.repsonses.exceptionhandler.response.PlatformNotFoundResponse;
-import org.jcd2052.api.models.Platform;
+import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.service.games.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +28,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -92,17 +94,58 @@ public class ApiGamesController {
         gameInfoService.save(gameInfo);
         return Utils.createResponse(gameInfo, HttpStatus.OK);
     }
+//    @GetMapping
+//    public ResponseEntity<BaseResponse> getGamesWithQuery(
+//            @RequestParam(defaultValue = "", required = false)
+//            String gameName,
+//            @RequestParam(defaultValue = "", required = false)
+//            String platformName,
+//            @RequestParam(defaultValue = "", required = false)
+//            String developerStudio,
+//            @RequestParam(defaultValue = "", required = false)
+//            String gameGenre,
+//            @RequestParam(defaultValue = "", required = false)
+//            Integer releaseDate) {
+//        CriteriaBuilder cb = session.getCriteriaBuilder();
+//        CriteriaQuery<Game> cr = cb.createQuery(Game.class);
+//        Root<Game> root = cr.from(Game.class);
+//        cr.select(root);
+//
+//
+//    }
 
+    //TODO instead of endless if-else, need to create a query and perform it.
     @GetMapping
-    public ResponseEntity<BaseResponse> getAllGames() {
-        return Utils.createResponse(gameService.getAll(), HttpStatus.OK);
-    }
-
-    @GetMapping(ENDPOINT_WITH_PLATFORM_AND_GAME_NAME)
-    public ResponseEntity<BaseResponse> getGame(@PathVariable String gameName,
-                                                @PathVariable String platformName) {
-        Game game = gameService.getGameByPlatformAndName(platformName, gameName);
-        return Utils.createResponse(game, HttpStatus.OK);
+    public ResponseEntity<BaseResponse> getGames(@RequestParam(defaultValue = "", required = false)
+                                                 String gameName,
+                                                 @RequestParam(defaultValue = "", required = false)
+                                                 String platformName,
+                                                 @RequestParam(defaultValue = "", required = false)
+                                                 String developerStudio,
+                                                 @RequestParam(defaultValue = "", required = false)
+                                                 String gameGenre,
+                                                 @RequestParam(defaultValue = "null",
+                                                         required = false)
+                                                 Integer releaseDate) {
+        Optional<Object> response = Optional.empty();
+        boolean isGameNameBlank = gameName.isBlank();
+        boolean isPlatformNameBlank = platformName.isBlank();
+        if (!isGameNameBlank && !isPlatformNameBlank) {
+            response = Optional.of(gameService.getGameByPlatformAndName(platformName, gameName));
+        } else if (!isGameNameBlank) {
+            response = Optional.of(gameInfoService.findGameInfoByName(gameName));
+        } else if (!isPlatformNameBlank) {
+            response = Optional.of(platformService.findPlatformByName(platformName).getGames());
+        } else if (!developerStudio.isBlank()) {
+            response = Optional.of(developerStudioService
+                    .findDeveloperStudioByStudioName(developerStudio)
+                    .getGameInfos());
+        } else if (!gameGenre.isBlank()) {
+            response = Optional.of(genreService.findGameGenreByGenreName(gameGenre).getGameInfos());
+        } else if (releaseDate != null) {
+            response = Optional.of(gameService.findAllByGameInfoGameReleaseDate(releaseDate));
+        }
+        return Utils.createResponse(response.orElse(gameService.getAll()), HttpStatus.OK);
     }
 
     @ExceptionHandler

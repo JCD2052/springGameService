@@ -1,4 +1,4 @@
-package org.jcd2052.api.models;
+package org.jcd2052.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

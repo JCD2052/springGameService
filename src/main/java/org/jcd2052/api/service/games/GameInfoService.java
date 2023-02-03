@@ -1,6 +1,6 @@
 package org.jcd2052.api.service.games;
 
-import org.jcd2052.api.models.GameInfo;
+import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.repositories.games.GameInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

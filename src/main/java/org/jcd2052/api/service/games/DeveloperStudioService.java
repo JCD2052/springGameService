@@ -1,7 +1,7 @@
 package org.jcd2052.api.service.games;
 
 import org.jcd2052.api.repsonses.exceptionhandler.exception.DeveloperStudioNotFoundException;
-import org.jcd2052.api.models.DeveloperStudio;
+import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.repositories.games.DeveloperStudioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

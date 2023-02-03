@@ -1,6 +1,6 @@
 package org.jcd2052.restclient.service;
 
-import org.jcd2052.api.models.Game;
+import org.jcd2052.api.entities.Game;
 import org.jcd2052.dto.GameDto;
 import org.jcd2052.dto.GameInfoDto;
 import org.jcd2052.restclient.route.Endpoint;
@@ -10,8 +10,8 @@ import java.util.List;
 
 public class GameRestService extends BaseRestService {
 
-    public List<Game> getAllGames() {
-        return Arrays.asList(getResponse(Game[].class));
+    public List<GameDto> getAllGames() {
+        return Arrays.asList(getResponse(GameDto[].class));
     }
 
     public Game getGame(String gameName, String platformName) {
