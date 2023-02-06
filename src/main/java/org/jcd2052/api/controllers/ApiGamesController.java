@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/games")
 public class ApiGamesController {
     private static final String ENDPOINT_WITH_PLATFORM_AND_GAME_NAME = "/{platformName}/{gameName}";
+    private static final String APPLICATION_JSON = "application/json";
     private final GameService gameService;
     private final PlatformService platformService;
     private final GameGenreService genreService;
@@ -58,7 +60,7 @@ public class ApiGamesController {
         this.gameInfoService = gameInfoService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameInfoDto gameInfoDto) {
         return Utils.createResponse(createGameFromGameInfoDto(gameInfoDto),
                 HttpStatus.CREATED);
@@ -79,13 +81,15 @@ public class ApiGamesController {
         return Utils.createResponse(responseMessage, HttpStatus.OK);
     }
 
-    @PatchMapping("/{gameName}")
+    @PatchMapping(value = "/{gameName}", consumes = APPLICATION_JSON,
+            produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> updateGame(@PathVariable String gameName,
                                                    @RequestBody GameInfoDto gameInfoDto) {
         GameInfo gameInfo = findAndUpdateGameInfo(gameName, gameInfoDto);
-        Set<Game> gamesFromResponse = gameInfoDto.getPlatforms().stream()
-                .map(platform -> new Game(gameInfo, platformService
-                        .findPlatformByName(platform.getPlatformName())))
+        Set<Game> gamesFromResponse = gameInfoDto.getPlatforms()
+                .stream()
+                .map(platformName -> new Game(gameInfo, platformService
+                        .findPlatformByName(platformName)))
                 .collect(Collectors.toSet());
         Set<Game> gamesToSave = Utils.findNewAndExisted(gameInfo.getGames(), gamesFromResponse);
         if (!gamesToSave.isEmpty()) {
@@ -94,28 +98,9 @@ public class ApiGamesController {
         gameInfoService.save(gameInfo);
         return Utils.createResponse(gameInfo, HttpStatus.OK);
     }
-//    @GetMapping
-//    public ResponseEntity<BaseResponse> getGamesWithQuery(
-//            @RequestParam(defaultValue = "", required = false)
-//            String gameName,
-//            @RequestParam(defaultValue = "", required = false)
-//            String platformName,
-//            @RequestParam(defaultValue = "", required = false)
-//            String developerStudio,
-//            @RequestParam(defaultValue = "", required = false)
-//            String gameGenre,
-//            @RequestParam(defaultValue = "", required = false)
-//            Integer releaseDate) {
-//        CriteriaBuilder cb = session.getCriteriaBuilder();
-//        CriteriaQuery<Game> cr = cb.createQuery(Game.class);
-//        Root<Game> root = cr.from(Game.class);
-//        cr.select(root);
-//
-//
-//    }
 
     //TODO instead of endless if-else, need to create a query and perform it.
-    @GetMapping
+    @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getGames(@RequestParam(defaultValue = "", required = false)
                                                  String gameName,
                                                  @RequestParam(defaultValue = "", required = false)
@@ -123,10 +108,7 @@ public class ApiGamesController {
                                                  @RequestParam(defaultValue = "", required = false)
                                                  String developerStudio,
                                                  @RequestParam(defaultValue = "", required = false)
-                                                 String gameGenre,
-                                                 @RequestParam(defaultValue = "null",
-                                                         required = false)
-                                                 Integer releaseDate) {
+                                                 String gameGenre) {
         Optional<Object> response = Optional.empty();
         boolean isGameNameBlank = gameName.isBlank();
         boolean isPlatformNameBlank = platformName.isBlank();
@@ -142,8 +124,6 @@ public class ApiGamesController {
                     .getGameInfos());
         } else if (!gameGenre.isBlank()) {
             response = Optional.of(genreService.findGameGenreByGenreName(gameGenre).getGameInfos());
-        } else if (releaseDate != null) {
-            response = Optional.of(gameService.findAllByGameInfoGameReleaseDate(releaseDate));
         }
         return Utils.createResponse(response.orElse(gameService.getAll()), HttpStatus.OK);
     }
@@ -162,16 +142,20 @@ public class ApiGamesController {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    private ResponseEntity<BaseResponse> handleDuplicateException(SQLException
+                                                                          exception) {
+        return Utils.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     private Set<Game> createGameFromGameInfoDto(GameInfoDto gameInfoDto) {
         GameGenre genre = genreService.findGameGenreByGenreName(
-                gameInfoDto.getGameGenre().getGenreName());
+                gameInfoDto.getGameGenre());
         DeveloperStudio developerStudio = developerStudioService
-                .findDeveloperStudioByStudioName(gameInfoDto.getGameDeveloperStudio()
-                        .getStudioName());
+                .findDeveloperStudioByStudioName(gameInfoDto.getGameDeveloperStudio());
         Set<Platform> platforms = gameInfoDto.getPlatforms()
                 .stream()
-                .map(platformDto -> platformService
-                        .findPlatformByName(platformDto.getPlatformName()))
+                .map(platformService::findPlatformByName)
                 .collect(Collectors.toSet());
 
         GameInfo gameInfo = new GameInfo(gameInfoDto.getName(),
@@ -191,11 +175,9 @@ public class ApiGamesController {
         gameInfo.setGameName(gameInfoDto.getName());
         gameInfo.setGameDescription(gameInfoDto.getGameDescription());
         gameInfo.setGameReleaseDate(gameInfoDto.getGameReleaseDate());
-        GameGenre genre = genreService.findGameGenreByGenreName(
-                gameInfoDto.getGameGenre().getGenreName());
+        GameGenre genre = genreService.findGameGenreByGenreName(gameInfoDto.getGameGenre());
         DeveloperStudio developerStudio = developerStudioService
-                .findDeveloperStudioByStudioName(gameInfoDto.getGameDeveloperStudio()
-                        .getStudioName());
+                .findDeveloperStudioByStudioName(gameInfoDto.getGameDeveloperStudio());
         gameInfo.setGameGenre(genre);
         gameInfo.setGameDeveloperStudio(developerStudio);
         return gameInfo;

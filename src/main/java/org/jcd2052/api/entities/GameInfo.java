@@ -1,8 +1,6 @@
 package org.jcd2052.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,8 +27,6 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @Table(name = "base_game_info")
-@JsonIdentityInfo(scope = GameInfo.class,
-        generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class GameInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
