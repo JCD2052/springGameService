@@ -18,9 +18,4 @@ public abstract class BaseService<T> {
     public void save(T entity) {
         repository.save(entity);
     }
-
-    @SuppressWarnings("unchecked")
-    public T getRepository() {
-        return (T) repository;
-    }
 }
