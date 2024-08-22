@@ -1,4 +1,4 @@
-package org.jcd2052.api.service.games;
+package org.jcd2052.api.service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,8 +1,8 @@
-package org.jcd2052.api.service.games;
+package org.jcd2052.api.service;
 
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundException;
 import org.jcd2052.api.entities.GameGenre;
-import org.jcd2052.api.repositories.games.GenreRepository;
+import org.jcd2052.api.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
