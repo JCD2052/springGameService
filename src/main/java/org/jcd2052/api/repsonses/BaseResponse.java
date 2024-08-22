@@ -2,13 +2,11 @@ package org.jcd2052.api.repsonses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Data
-@ToString
 public class BaseResponse {
     private final Object response;
     private final LocalDateTime timestamp;

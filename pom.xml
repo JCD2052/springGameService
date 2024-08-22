@@ -6,8 +6,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.3.2</version>
+        <relativePath/>
     </parent>
     <groupId>org.jcd2052</groupId>
     <artifactId>springGameService</artifactId>
@@ -15,7 +15,7 @@
     <name>springGameService</name>
     <description>Spring game service</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>

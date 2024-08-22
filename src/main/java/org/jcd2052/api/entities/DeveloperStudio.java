@@ -8,28 +8,33 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
+import org.jcd2052.api.dto.DeveloperStudioDto;
 
 import java.util.Set;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 @Table(name = "developer_studio")
 public class DeveloperStudio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studio_id")
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "studio_name")
+    @Column(name = "studio_name", unique = true)
     private String studioName;
 
-    @OneToMany(mappedBy = "gameDeveloperStudio")
+    @OneToMany(mappedBy = "developerStudio")
     @ToString.Exclude
     @JsonBackReference
-    private Set<GameInfo> gameInfos;
+    private Set<Game> games;
+
+    public DeveloperStudioDto toDeveloperStudioDto() {
+        return DeveloperStudioDto.builder()
+                .id(id)
+                .developerStudioName(studioName)
+                .build();
+    }
 }

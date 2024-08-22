@@ -1,70 +1,69 @@
 package org.jcd2052.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.jcd2052.api.dto.GameDto;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "game")
-@JsonIdentityInfo(scope = Game.class,
-        generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "base_game_info_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "game_info_id")
     private GameInfo gameInfo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "platform_id")
     private Platform platform;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
-    private Set<GameRating> gameRatings = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "developer_studio_id")
+    private DeveloperStudio developerStudio;
 
-    public Game(GameInfo gameInfo, Platform platform) {
-        this.gameInfo = gameInfo;
-        this.platform = platform;
-    }
+    @Column(name = "release_date")
+    @Temporal(value = TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private LocalDate releaseDate;
 
-    public Set<Platform> getOtherPlatforms() {
-        return gameInfo.getAllPlatforms().stream()
-                .filter(gamePlatform -> !gamePlatform.equals(this.platform))
-                .collect(Collectors.toSet());
-    }
-
-    public double getAverageRating() {
-        return gameRatings.stream()
-                .flatMapToInt(gameRating -> IntStream.of(gameRating.getRating()))
-                .average()
-                .orElse(0.0);
+    @Transient
+    public GameDto toGameDto() {
+        return GameDto.builder()
+                .id(id)
+                .gameName(gameInfo.getGameName())
+                .description(gameInfo.getGameDescription())
+                .gameGenre(gameInfo.getGameGenre().getGenreName())
+                .platform(platform.getPlatformName())
+                .developerStudio(developerStudio.getStudioName())
+                .releaseDate(releaseDate)
+                .build();
     }
 }

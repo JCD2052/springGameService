@@ -15,10 +15,7 @@ public class DeveloperStudioService extends BaseService<DeveloperStudio> {
         super(repository);
     }
 
-    public DeveloperStudio findDeveloperStudioByStudioName(String studioName) {
-        return ((DeveloperStudioRepository) repository)
-                .findDeveloperStudioByStudioName(studioName)
-                .orElseThrow(() -> new DeveloperStudioNotFoundException(studioName));
+    public DeveloperStudio findDeveloperStudioById(int studioId) {
+        return repository.findById(studioId).orElseThrow(() -> new DeveloperStudioNotFoundException(studioId));
     }
-
 }

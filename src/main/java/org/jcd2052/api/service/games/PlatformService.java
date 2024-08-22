@@ -4,10 +4,8 @@ import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundExce
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.repositories.games.PlatformRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Component
 @Service
 public class PlatformService extends BaseService<Platform> {
     @Autowired
@@ -15,8 +13,7 @@ public class PlatformService extends BaseService<Platform> {
         super(repository);
     }
 
-    public Platform findPlatformByName(String platformName) {
-        return ((PlatformRepository) repository).findPlatformByPlatformName(platformName)
-                .orElseThrow(() -> new PlatformNotFoundException(platformName));
+    public Platform findPlatformByIdOrThrowError(int platformId) {
+        return repository.findById(platformId).orElseThrow(() -> new PlatformNotFoundException(platformId));
     }
 }

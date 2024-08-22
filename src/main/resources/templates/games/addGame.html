@@ -5,7 +5,7 @@
     <title>Add a new game</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/games}" th:object="${gameInfoDto}">
+<form th:method="POST" th:action="@{/games}" th:object="${gameInfoDtoInput}">
     <div>
         <label for="name">Enter game name:</label>
         <input id="name" type="text" th:field="*{name}">

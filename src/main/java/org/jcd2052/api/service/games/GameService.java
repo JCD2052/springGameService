@@ -5,7 +5,7 @@ import org.jcd2052.api.repositories.games.GameRepository;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class GameService extends BaseService<Game> {
@@ -13,27 +13,14 @@ public class GameService extends BaseService<Game> {
         super(repository);
     }
 
-    public Game getGameByPlatformAndName(String platformName, String gameName) {
+    public Game getGameByIdOrThrowError(int gameId) {
+        return repository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
+    }
+
+    public Optional<Game> isGameExisted(String gameName, int platformId) {
         return ((GameRepository) repository)
-                .findGameByPlatformPlatformNameAndGameInfoGameName(platformName, gameName)
-                .orElseThrow(() -> new GameNotFoundException(gameName, platformName));
+                .findGameByGameInfoGameNameAndPlatformId(gameName, platformId);
     }
 
-    public Set<Game> findAllGamesByGenreName(String genreName) {
-        return ((GameRepository) repository).findAllByGameInfoGameGenreGenreName(genreName);
-    }
-
-    public Set<Game> findAllGamesByPlatformName(String platformName) {
-        return ((GameRepository) repository).findAllByPlatformPlatformName(platformName);
-    }
-
-    public Set<Game> findAllByGameInfoGameDeveloperStudioStudioName(String developerStudioName) {
-        return ((GameRepository) repository)
-                .findAllByGameInfoGameDeveloperStudioStudioName(developerStudioName);
-    }
-
-    public Set<Game> findAllByGameInfoGameReleaseDate(int releaseData) {
-        return ((GameRepository) repository).findAllByGameInfoGameReleaseDate(releaseData);
-    }
 
 }

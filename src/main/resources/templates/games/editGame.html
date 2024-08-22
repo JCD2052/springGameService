@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="|Edit a game ${gameInfoDto.getName()}|">title</title>
+    <title th:text="|Edit a game ${gameInfoDtoInput.getName()}|">title</title>
 </head>
 <body>
 <form th:method="PATCH" th:action="@{/games/{gameName} (gameName=${gameName})}"
-      th:object="${gameInfoDto}">
+      th:object="${gameInfoDtoInput}">
     <div>
         <label for="name">Enter game name:</label>
         <input id="name" type="text" th:field="*{name}">

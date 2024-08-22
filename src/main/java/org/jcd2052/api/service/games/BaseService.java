@@ -2,8 +2,7 @@ package org.jcd2052.api.service.games;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 public abstract class BaseService<T> {
     protected final JpaRepository<T, Integer> repository;
@@ -12,15 +11,16 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    public Set<T> getAll() {
-        return new HashSet<>(repository.findAll());
+    public Collection<T> getAll() {
+        return repository.findAll();
     }
 
     public void save(T entity) {
         repository.save(entity);
     }
 
-    public void deleteEntity(T entity) {
-        repository.delete(entity);
+    @SuppressWarnings("unchecked")
+    public T getRepository() {
+        return (T) repository;
     }
 }
