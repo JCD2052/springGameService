@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/genres")
@@ -38,7 +38,7 @@ public class GenresController {
                 gameGenreService.findAll()
                         .stream()
                         .map(GameGenre::toGenreDto)
-                        .collect(Collectors.toList()),
+                        .toList(),
                 HttpStatus.OK);
     }
 
@@ -50,7 +50,7 @@ public class GenresController {
                                 .stream()
                                 .map(GameInfo::getGames)
                                 .flatMap(Collection::stream)
-                                .collect(Collectors.toList())),
+                                .toList()),
                 HttpStatus.OK);
     }
 
