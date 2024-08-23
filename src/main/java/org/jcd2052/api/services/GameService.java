@@ -1,7 +1,7 @@
-package org.jcd2052.api.service.games;
+package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.Game;
-import org.jcd2052.api.repositories.games.GameRepository;
+import org.jcd2052.api.repositories.GameRepository;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,4 @@ public class GameService extends BaseService<Game> {
         return ((GameRepository) repository)
                 .findGameByGameInfoGameNameAndPlatformId(gameName, platformId);
     }
-
-
 }

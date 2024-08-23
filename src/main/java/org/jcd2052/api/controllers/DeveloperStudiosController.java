@@ -3,7 +3,7 @@ package org.jcd2052.api.controllers;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.service.games.DeveloperStudioService;
+import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/studio")
+@RequestMapping("/api/studios")
 @Transactional(readOnly = true)
-public class DeveloperStudioController {
+public class DeveloperStudiosController {
     private static final String APPLICATION_JSON = "application/json";
     private final DeveloperStudioService developerStudioService;
 
     @Autowired
-    public DeveloperStudioController(DeveloperStudioService developerStudioService) {
+    public DeveloperStudiosController(DeveloperStudioService developerStudioService) {
         this.developerStudioService = developerStudioService;
     }
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllStudios() {
         return Utils.createResponse(
-                developerStudioService.getAll()
+                developerStudioService.findAll()
                         .stream()
                         .map(DeveloperStudio::toDeveloperStudioDto)
                         .collect(Collectors.toList()),

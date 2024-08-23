@@ -1,4 +1,4 @@
-package org.jcd2052.api.service.games;
+package org.jcd2052.api.services;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,11 +11,15 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    public Collection<T> getAll() {
+    public Collection<T> findAll() {
         return repository.findAll();
     }
 
     public void save(T entity) {
         repository.save(entity);
+    }
+
+    public void delete(T entity) {
+        repository.delete(entity);
     }
 }

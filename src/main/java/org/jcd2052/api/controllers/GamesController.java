@@ -5,17 +5,17 @@ import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.factories.GameDtoFactory;
-import org.jcd2052.api.repositories.games.GameInfoRepository;
+import org.jcd2052.api.repositories.GameInfoRepository;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.DeveloperStudioNotFoundException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameAlreadyExistedException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
 
-import org.jcd2052.api.service.games.DeveloperStudioService;
-import org.jcd2052.api.service.games.GameGenreService;
-import org.jcd2052.api.service.games.GameService;
-import org.jcd2052.api.service.games.PlatformService;
+import org.jcd2052.api.services.DeveloperStudioService;
+import org.jcd2052.api.services.GameGenreService;
+import org.jcd2052.api.services.GameService;
+import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.utils.Utils;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.dto.GameDtoInput;
@@ -63,7 +63,7 @@ public class GamesController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGames() {
-        return Utils.createResponse(GameDtoFactory.createGameDtoList(gameService.getAll()), HttpStatus.OK);
+        return Utils.createResponse(GameDtoFactory.createGameDtoList(gameService.findAll()), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

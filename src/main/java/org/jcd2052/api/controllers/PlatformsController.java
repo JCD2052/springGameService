@@ -4,7 +4,7 @@ import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
-import org.jcd2052.api.service.games.PlatformService;
+import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +21,19 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/platforms")
 @Transactional(readOnly = true)
-public class PlatformController {
+public class PlatformsController {
     private static final String APPLICATION_JSON = "application/json";
     private final PlatformService platformService;
 
     @Autowired
-    public PlatformController(PlatformService platformService) {
+    public PlatformsController(PlatformService platformService) {
         this.platformService = platformService;
     }
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllPlatform() {
         return Utils.createResponse(
-                platformService.getAll()
+                platformService.findAll()
                         .stream()
                         .map(Platform::toPlatformDto)
                         .collect(Collectors.toList()),
