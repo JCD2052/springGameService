@@ -5,7 +5,7 @@ import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptions.PlatformNotFoundException;
 import org.jcd2052.api.services.PlatformService;
-import org.jcd2052.api.utils.Utils;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class PlatformsController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllPlatform() {
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 platformService.findAll()
                         .stream()
                         .map(Platform::toPlatformDto)
@@ -42,7 +42,7 @@ public class PlatformsController {
 
     @GetMapping(value = "/{platformId}/games")
     public ResponseEntity<BaseResponse> getGamesByPlatformName(@PathVariable int platformId) {
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 GameDtoFactory.createGameDtoList(platformService.findPlatformByIdOrThrowError(platformId).getGames()),
                 HttpStatus.OK);
     }
@@ -50,6 +50,6 @@ public class PlatformsController {
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handlePlatformNotFoundException(
             PlatformNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

@@ -6,7 +6,7 @@ import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptions.GameGenreNotFoundException;
 import org.jcd2052.api.services.GameGenreService;
-import org.jcd2052.api.utils.Utils;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class GenresController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGenres() {
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 gameGenreService.findAll()
                         .stream()
                         .map(GameGenre::toGenreDto)
@@ -44,7 +44,7 @@ public class GenresController {
 
     @GetMapping(value = "/{genreId}/games")
     public ResponseEntity<BaseResponse> getAllGamesByGenreName(@PathVariable int genreId) {
-        return Utils.createResponse(GameDtoFactory.createGameDtoList(
+        return ResponseFactory.createResponse(GameDtoFactory.createGameDtoList(
                         gameGenreService.findGameGenreByIdOrThrowError(genreId)
                                 .getGameInfos()
                                 .stream()
@@ -56,6 +56,6 @@ public class GenresController {
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleGenreNotFoundException(GameGenreNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

@@ -4,7 +4,7 @@ import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.services.DeveloperStudioService;
-import org.jcd2052.api.utils.Utils;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class DeveloperStudiosController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllStudios() {
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 developerStudioService.findAll()
                         .stream()
                         .map(DeveloperStudio::toDeveloperStudioDto)
@@ -40,7 +40,7 @@ public class DeveloperStudiosController {
 
     @GetMapping(value = "/{studioId}/games")
     public ResponseEntity<BaseResponse> getGamesByStudio(@PathVariable int studioId) {
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 GameDtoFactory.createGameDtoList(developerStudioService.findDeveloperStudioById(studioId).getGames()),
                 HttpStatus.OK);
     }

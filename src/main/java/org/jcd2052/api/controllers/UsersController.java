@@ -8,7 +8,7 @@ import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.exceptions.UserNotFoundException;
 import org.jcd2052.api.services.UserService;
-import org.jcd2052.api.utils.Utils;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +39,7 @@ public class UsersController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllUsers() {
-        return Utils.createResponse(UserDtoFactory.createUserDtoList(userService.findAll()), HttpStatus.OK);
+        return ResponseFactory.createResponse(UserDtoFactory.createUserDtoList(userService.findAll()), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -55,7 +55,7 @@ public class UsersController {
                     .userRole(input.getRoleName())
                     .build();
             userService.save(user);
-            return Utils.createResponse(user.toUserDto(), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(user.toUserDto(), HttpStatus.CREATED);
         }
         throw new UserAlreadyCreatedException(username, email);
     }
@@ -74,7 +74,7 @@ public class UsersController {
             Optional.ofNullable(input.getRoleName()).ifPresent(user::setUserRole);
             userService.save(user);
 
-            return Utils.createResponse(String.format("Updated. %s", user.toUserDto()), HttpStatus.OK);
+            return ResponseFactory.createResponse(String.format("Updated. %s", user.toUserDto()), HttpStatus.OK);
         }
         throw new UserAlreadyCreatedException(userByNameOrEmail.get().toUserDto());
     }
@@ -83,18 +83,18 @@ public class UsersController {
     public ResponseEntity<BaseResponse> deleteUserById(@PathVariable int userId) {
         User user = userService.findByIdOrThrowError(userId);
         userService.delete(user);
-        return Utils.createResponse(
+        return ResponseFactory.createResponse(
                 String.format("User with id %s was deleted.%nAdditional info:%n%s", userId, user.toUserDto()),
                 HttpStatus.OK);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleUserNotFoundException(UserNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleUserAlreadyCreatedException(UserAlreadyCreatedException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

@@ -16,7 +16,7 @@ import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.services.GameService;
 import org.jcd2052.api.services.PlatformService;
-import org.jcd2052.api.utils.Utils;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.dto.GameDtoInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class GamesController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGames() {
-        return Utils.createResponse(GameDtoFactory.createGameDtoList(gameService.findAll()), HttpStatus.OK);
+        return ResponseFactory.createResponse(GameDtoFactory.createGameDtoList(gameService.findAll()), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -94,7 +94,7 @@ public class GamesController {
             gameInfoRepository.save(gameInfo);
             gameService.save(game);
 
-            return Utils.createResponse(game.toGameDto(), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(game.toGameDto(), HttpStatus.CREATED);
         }
         throw new GameAlreadyExistedException(gameExisted.get().toGameDto());
     }
@@ -110,39 +110,39 @@ public class GamesController {
             gameInfoRepository.delete(gameInfo);
         }
 
-        return Utils.createResponse(String.format("Game -- %d has been deleted.", gameId), HttpStatus.OK);
+        return ResponseFactory.createResponse(String.format("Game -- %d has been deleted.", gameId), HttpStatus.OK);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleGenreNotFoundException(GameGenreNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handeDeveloperStudioNotFoundException(
             DeveloperStudioNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleGameNotFoundException(GameNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleGameAlreadyExistedException(
             GameAlreadyExistedException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handlePlatformNotFoundException(
             PlatformNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BaseResponse> handleDuplicateException(SQLException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
