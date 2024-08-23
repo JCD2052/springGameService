@@ -12,10 +12,10 @@ import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundExc
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
 
-import org.jcd2052.api.service.DeveloperStudioService;
-import org.jcd2052.api.service.GameGenreService;
-import org.jcd2052.api.service.GameService;
-import org.jcd2052.api.service.PlatformService;
+import org.jcd2052.api.services.DeveloperStudioService;
+import org.jcd2052.api.services.GameGenreService;
+import org.jcd2052.api.services.GameService;
+import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.utils.Utils;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.dto.GameDtoInput;

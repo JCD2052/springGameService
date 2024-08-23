@@ -5,7 +5,7 @@ import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundException;
-import org.jcd2052.api.service.GameGenreService;
+import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package org.jcd2052.api.service;
+package org.jcd2052.api.services;
 
 import org.jcd2052.api.repsonses.exceptionhandler.exception.DeveloperStudioNotFoundException;
 import org.jcd2052.api.entities.DeveloperStudio;

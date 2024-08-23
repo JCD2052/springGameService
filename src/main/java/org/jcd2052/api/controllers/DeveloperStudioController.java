@@ -3,7 +3,7 @@ package org.jcd2052.api.controllers;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.service.DeveloperStudioService;
+import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
