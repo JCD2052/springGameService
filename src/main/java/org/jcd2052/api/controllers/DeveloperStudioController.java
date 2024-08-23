@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/studio")
+@RequestMapping("/api/studios")
 @Transactional(readOnly = true)
 public class DeveloperStudioController {
     private static final String APPLICATION_JSON = "application/json";
