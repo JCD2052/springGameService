@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/studios")
 @Transactional(readOnly = true)
-public class DeveloperStudioController {
+public class DeveloperStudiosController {
     private static final String APPLICATION_JSON = "application/json";
     private final DeveloperStudioService developerStudioService;
 
     @Autowired
-    public DeveloperStudioController(DeveloperStudioService developerStudioService) {
+    public DeveloperStudiosController(DeveloperStudioService developerStudioService) {
         this.developerStudioService = developerStudioService;
     }
 

@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/genres")
 @Transactional(readOnly = true)
-public class GenreController {
+public class GenresController {
     private static final String APPLICATION_JSON = "application/json";
     private final GameGenreService gameGenreService;
 
     @Autowired
-    public GenreController(GameGenreService gameGenreService) {
+    public GenresController(GameGenreService gameGenreService) {
         this.gameGenreService = gameGenreService;
     }
 

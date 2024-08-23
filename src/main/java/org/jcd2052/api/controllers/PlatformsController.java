@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/platforms")
 @Transactional(readOnly = true)
-public class PlatformController {
+public class PlatformsController {
     private static final String APPLICATION_JSON = "application/json";
     private final PlatformService platformService;
 
     @Autowired
-    public PlatformController(PlatformService platformService) {
+    public PlatformsController(PlatformService platformService) {
         this.platformService = platformService;
     }
 
