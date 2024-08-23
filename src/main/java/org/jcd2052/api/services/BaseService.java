@@ -18,4 +18,8 @@ public abstract class BaseService<T> {
     public void save(T entity) {
         repository.save(entity);
     }
+
+    public void delete(T entity) {
+        repository.delete(entity);
+    }
 }
