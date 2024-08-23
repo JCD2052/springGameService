@@ -21,6 +21,4 @@ public class GameService extends BaseService<Game> {
         return ((GameRepository) repository)
                 .findGameByGameInfoGameNameAndPlatformId(gameName, platformId);
     }
-
-
 }

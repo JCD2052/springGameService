@@ -3,12 +3,10 @@ package org.jcd2052.api.services;
 import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.repositories.PlatformRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PlatformService extends BaseService<Platform> {
-    @Autowired
     protected PlatformService(PlatformRepository repository) {
         super(repository);
     }

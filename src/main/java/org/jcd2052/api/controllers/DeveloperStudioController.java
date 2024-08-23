@@ -31,7 +31,7 @@ public class DeveloperStudioController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllStudios() {
         return Utils.createResponse(
-                developerStudioService.getAll()
+                developerStudioService.findAll()
                         .stream()
                         .map(DeveloperStudio::toDeveloperStudioDto)
                         .collect(Collectors.toList()),

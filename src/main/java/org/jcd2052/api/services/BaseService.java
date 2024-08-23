@@ -11,7 +11,7 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    public Collection<T> getAll() {
+    public Collection<T> findAll() {
         return repository.findAll();
     }
 

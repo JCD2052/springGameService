@@ -63,7 +63,7 @@ public class GamesController {
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGames() {
-        return Utils.createResponse(GameDtoFactory.createGameDtoList(gameService.getAll()), HttpStatus.OK);
+        return Utils.createResponse(GameDtoFactory.createGameDtoList(gameService.findAll()), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

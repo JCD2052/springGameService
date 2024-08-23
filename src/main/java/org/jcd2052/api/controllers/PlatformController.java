@@ -33,7 +33,7 @@ public class PlatformController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllPlatform() {
         return Utils.createResponse(
-                platformService.getAll()
+                platformService.findAll()
                         .stream()
                         .map(Platform::toPlatformDto)
                         .collect(Collectors.toList()),

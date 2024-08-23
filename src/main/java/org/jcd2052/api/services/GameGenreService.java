@@ -4,11 +4,9 @@ import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundExc
 import org.jcd2052.api.entities.GameGenre;
 import org.jcd2052.api.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
-@Component
 public class GameGenreService extends BaseService<GameGenre> {
     @Autowired
     protected GameGenreService(GenreRepository repository) {
