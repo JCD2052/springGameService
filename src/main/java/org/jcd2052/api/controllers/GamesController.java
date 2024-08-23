@@ -6,11 +6,11 @@ import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repositories.GameInfoRepository;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.DeveloperStudioNotFoundException;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.GameAlreadyExistedException;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.GameGenreNotFoundException;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
+import org.jcd2052.api.exceptions.DeveloperStudioNotFoundException;
+import org.jcd2052.api.exceptions.GameAlreadyExistedException;
+import org.jcd2052.api.exceptions.GameGenreNotFoundException;
+import org.jcd2052.api.exceptions.GameNotFoundException;
+import org.jcd2052.api.exceptions.PlatformNotFoundException;
 
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.services.GameGenreService;

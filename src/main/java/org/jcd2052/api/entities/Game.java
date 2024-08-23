@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -22,6 +23,8 @@ import org.jcd2052.api.dto.GameDto;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,23 +39,21 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "game_info_id")
     private GameInfo gameInfo;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "platform_id")
     private Platform platform;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "developer_studio_id")
     private DeveloperStudio developerStudio;
-
     @Column(name = "release_date")
     @Temporal(value = TemporalType.DATE)
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate releaseDate;
+    @OneToMany(mappedBy = "game")
+    private Set<GameReview> gameReviews = new LinkedHashSet<>();
 
     @Transient
     public GameDto toGameDto() {

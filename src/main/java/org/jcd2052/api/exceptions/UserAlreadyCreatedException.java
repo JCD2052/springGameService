@@ -1,4 +1,4 @@
-package org.jcd2052.api.repsonses.exceptionhandler.exception;
+package org.jcd2052.api.exceptions;
 
 import org.jcd2052.api.dto.UserDto;
 

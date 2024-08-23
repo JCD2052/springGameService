@@ -3,7 +3,7 @@ package org.jcd2052.api.controllers;
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.factories.GameDtoFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.PlatformNotFoundException;
+import org.jcd2052.api.exceptions.PlatformNotFoundException;
 import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;

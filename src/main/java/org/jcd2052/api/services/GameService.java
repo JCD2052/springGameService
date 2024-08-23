@@ -2,7 +2,7 @@ package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.repositories.GameRepository;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.GameNotFoundException;
+import org.jcd2052.api.exceptions.GameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

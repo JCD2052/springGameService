@@ -2,7 +2,7 @@ package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.repositories.UserRepository;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.UserNotFoundException;
+import org.jcd2052.api.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
