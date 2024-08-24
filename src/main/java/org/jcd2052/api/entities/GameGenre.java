@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +23,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "genre")
 public class GameGenre {

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
@@ -48,8 +49,17 @@ public class GamesController {
     private final PlatformService platformService;
 
     @GetMapping(produces = APPLICATION_JSON)
-    public ResponseEntity<BaseResponse> getAllGames() {
-        return ResponseFactory.createResponse(GameDtoFactory.createGameDtoList(gameService.findAll()), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> fetchGames(
+            @RequestParam(required = false) Integer genGameId,
+            @RequestParam(required = false) Integer gameId,
+            @RequestParam(required = false) Integer platformId,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer developerStudioId) {
+        Game gameProbe = Game.createGameByIds(genGameId, gameId, platformId, genreId, developerStudioId);
+
+        return ResponseFactory.createResponse(
+                GameDtoFactory.createGameDtoList(gameService.fetchGame(gameProbe)),
+                HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -80,9 +90,9 @@ public class GamesController {
             gameInfoRepository.save(gameInfo);
             gameService.save(game);
 
-            return ResponseFactory.createResponse(game.toGameDto(), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(GameDtoFactory.createGameDto(game), HttpStatus.CREATED);
         }
-        throw new GameAlreadyExistedException(gameExisted.get().toGameDto());
+        throw new GameAlreadyExistedException(GameDtoFactory.createGameDto(gameExisted.get()));
     }
 
     @DeleteMapping(value = "/{gameId}")
