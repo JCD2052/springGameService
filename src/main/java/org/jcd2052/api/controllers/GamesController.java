@@ -1,5 +1,6 @@
 package org.jcd2052.api.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.entities.GameInfo;
@@ -11,7 +12,6 @@ import org.jcd2052.api.exceptions.GameAlreadyExistedException;
 import org.jcd2052.api.exceptions.GameGenreNotFoundException;
 import org.jcd2052.api.exceptions.GameNotFoundException;
 import org.jcd2052.api.exceptions.PlatformNotFoundException;
-
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.services.GameService;
@@ -19,7 +19,6 @@ import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.dto.GameDtoInput;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/games")
 @Transactional
@@ -46,20 +46,6 @@ public class GamesController {
     private final DeveloperStudioService developerStudioService;
     private final GameGenreService gameGenreService;
     private final PlatformService platformService;
-
-    @Autowired
-    public GamesController(
-            GameInfoRepository gameInfoRepository,
-            GameService gameService,
-            DeveloperStudioService developerStudioService,
-            GameGenreService gameGenreService,
-            PlatformService platformService) {
-        this.gameInfoRepository = gameInfoRepository;
-        this.gameService = gameService;
-        this.developerStudioService = developerStudioService;
-        this.gameGenreService = gameGenreService;
-        this.platformService = platformService;
-    }
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGames() {

@@ -1,5 +1,6 @@
 package org.jcd2052.api.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.UserDtoInput;
@@ -9,7 +10,6 @@ import org.jcd2052.api.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.exceptions.UserNotFoundException;
 import org.jcd2052.api.services.UserService;
 import org.jcd2052.api.repsonses.ResponseFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 @Transactional
 public class UsersController {
     private static final String APPLICATION_JSON = "application/json";
     private final UserService userService;
-
-    @Autowired
-    public UsersController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllUsers() {
