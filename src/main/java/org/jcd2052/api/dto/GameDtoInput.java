@@ -2,12 +2,10 @@ package org.jcd2052.api.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Data
-@ToString
 @NoArgsConstructor
 public class GameDtoInput {
     private String name;

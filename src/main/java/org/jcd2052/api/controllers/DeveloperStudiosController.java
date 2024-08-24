@@ -23,7 +23,7 @@ public class DeveloperStudiosController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllStudios() {
         return ResponseFactory.createResponse(
-                developerStudioService.findAll()
+                developerStudioService.fetchAll()
                         .stream()
                         .map(DeveloperStudio::toDeveloperStudioDto)
                         .toList(),

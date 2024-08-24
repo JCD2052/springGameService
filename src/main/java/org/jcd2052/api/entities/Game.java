@@ -21,7 +21,6 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -52,7 +51,7 @@ public class Game {
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate releaseDate;
     @OneToMany(mappedBy = "game")
-    private Set<GameReview> gameReviews = new LinkedHashSet<>();
+    private Set<GameReview> gameReviews;
 
     public static Game createGameByIds(
             Integer genGameId,

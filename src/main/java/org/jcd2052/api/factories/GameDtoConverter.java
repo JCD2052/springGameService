@@ -1,17 +1,14 @@
 package org.jcd2052.api.factories;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.jcd2052.api.dto.GameDto;
 import org.jcd2052.api.entities.Game;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GameDtoFactory {
-    public static GameDto createGameDto(Game entity) {
+@Component
+public class GameDtoConverter implements DtoEntityConverter<Game, GameDto> {
+    public GameDto convertToDto(Game entity) {
         return GameDto.builder()
                 .id(entity.getId())
                 .gameName(entity.getGameInfo().getGameName())
@@ -23,10 +20,8 @@ public class GameDtoFactory {
                 .build();
     }
 
-    public static List<GameDto> createGameDtoList(Collection<Game> entities) {
-        return entities.stream()
-                .map(GameDtoFactory::createGameDto)
-                .sorted(Comparator.comparing(GameDto::getId))
-                .toList();
+    @Override
+    public Comparator<GameDto> createDtoComparator() {
+        return Comparator.comparing(GameDto::getId);
     }
 }

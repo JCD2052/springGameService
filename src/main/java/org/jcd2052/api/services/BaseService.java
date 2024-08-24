@@ -1,5 +1,6 @@
 package org.jcd2052.api.services;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
@@ -11,8 +12,12 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    public Collection<T> findAll() {
+    public Collection<T> fetchAll() {
         return repository.findAll();
+    }
+
+    public Collection<T> fetchEntities(T entity) {
+        return repository.findAll(Example.of(entity));
     }
 
     public void save(T entity) {

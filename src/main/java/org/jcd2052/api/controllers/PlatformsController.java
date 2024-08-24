@@ -23,7 +23,7 @@ public class PlatformsController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllPlatform() {
         return ResponseFactory.createResponse(
-                platformService.findAll()
+                platformService.fetchAll()
                         .stream()
                         .map(Platform::toPlatformDto)
                         .toList(),

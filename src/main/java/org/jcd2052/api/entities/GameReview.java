@@ -11,17 +11,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Generated;
-import org.jcd2052.api.dto.GameReviewDto;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -48,28 +47,25 @@ public class GameReview {
     @NotNull
     @Column(name = "review_comment", nullable = false, length = Integer.MAX_VALUE)
     private String reviewComment;
-    @NotNull
     @Column(name = "time_created", nullable = false)
     @Generated
     @Temporal(value = TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private LocalDateTime timeCreated;
-    @NotNull
     @Column(name = "time_updated", nullable = false)
     @Generated
     @Temporal(value = TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private LocalDateTime timeUpdated;
 
-    @Transient
-    public GameReviewDto toGameReviewDto() {
-        return GameReviewDto.builder()
-                .id(id)
-                .game(game.toGameDto())
-                .user(reviewerUser.toUserDto())
-                .score(score)
-                .comment(reviewComment)
-                .timeCreated(timeCreated)
-                .build();
+    public static GameReview createGameReviewFromIds(
+            Integer reviewId,
+            Integer userId,
+            Integer gameId) {
+        GameReview gameReviewProbe = new GameReview();
+        Optional.ofNullable(reviewId).ifPresent(gameReviewProbe::setId);
+        Optional.ofNullable(gameId).ifPresent(id -> gameReviewProbe.setGame(Game.builder().id(id).build()));
+        Optional.ofNullable(userId).ifPresent(id -> gameReviewProbe.setReviewerUser(User.builder().id(id).build()));
+        return gameReviewProbe;
     }
 }

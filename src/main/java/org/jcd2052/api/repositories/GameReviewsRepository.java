@@ -4,11 +4,9 @@ import org.jcd2052.api.entities.GameReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GameReviewsRepository extends JpaRepository<GameReview, Integer> {
-    List<GameReview> findAllByReviewerUserId(int userId);
-
-    List<GameReview> findAllByGameId(int gameId);
+    Optional<GameReview> findGameReviewByGameIdAndReviewerUserId(int gameId, int reviewUserId);
 }

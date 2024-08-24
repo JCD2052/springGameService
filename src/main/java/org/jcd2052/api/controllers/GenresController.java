@@ -23,7 +23,7 @@ public class GenresController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllGenres() {
         return ResponseFactory.createResponse(
-                gameGenreService.findAll()
+                gameGenreService.fetchAll()
                         .stream()
                         .map(GameGenre::toGenreDto)
                         .toList(),

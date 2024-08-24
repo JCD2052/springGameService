@@ -10,19 +10,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Generated;
-import org.jcd2052.api.dto.UserDto;
 import org.jcd2052.api.utils.converters.UserRoleConvertor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -53,16 +50,5 @@ public class User {
     @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
     @OneToMany(mappedBy = "reviewerUser")
-    private Set<GameReview> gameReviews = new LinkedHashSet<>();
-
-    @Transient
-    public UserDto toUserDto() {
-        return UserDto.builder()
-                .id(id)
-                .email(email)
-                .username(username)
-                .userRole(userRole.name())
-                .timeCreated(timeCreated)
-                .build();
-    }
+    private Set<GameReview> gameReviews;
 }

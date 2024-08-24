@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.UserDtoInput;
-import org.jcd2052.api.factories.UserDtoFactory;
+import org.jcd2052.api.factories.UserDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.exceptions.UserNotFoundException;
@@ -32,10 +32,11 @@ import java.util.Optional;
 public class UsersController {
     private static final String APPLICATION_JSON = "application/json";
     private final UserService userService;
+    private final UserDtoConverter userDtoConverter;
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> getAllUsers() {
-        return ResponseFactory.createResponse(UserDtoFactory.createUserDtoList(userService.findAll()), HttpStatus.OK);
+        return ResponseFactory.createResponse(userDtoConverter.createDtoListFromEntities(userService.fetchAll()), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -51,7 +52,7 @@ public class UsersController {
                     .userRole(input.getRoleName())
                     .build();
             userService.save(user);
-            return ResponseFactory.createResponse(user.toUserDto(), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(userDtoConverter.convertToDto(user), HttpStatus.CREATED);
         }
         throw new UserAlreadyCreatedException(username, email);
     }
@@ -70,9 +71,11 @@ public class UsersController {
             Optional.ofNullable(input.getRoleName()).ifPresent(user::setUserRole);
             userService.save(user);
 
-            return ResponseFactory.createResponse(String.format("Updated. %s", user.toUserDto()), HttpStatus.OK);
+            return ResponseFactory.createResponse(
+                    String.format("Updated. %s", userDtoConverter.convertToDto(user)),
+                    HttpStatus.OK);
         }
-        throw new UserAlreadyCreatedException(userByNameOrEmail.get().toUserDto());
+        throw new UserAlreadyCreatedException(userDtoConverter.convertToDto(userByNameOrEmail.get()));
     }
 
     @DeleteMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON, value = "/{userId}")
@@ -80,7 +83,10 @@ public class UsersController {
         User user = userService.findByIdOrThrowError(userId);
         userService.delete(user);
         return ResponseFactory.createResponse(
-                String.format("User with id %s was deleted.%nAdditional info:%n%s", userId, user.toUserDto()),
+                String.format(
+                        "User with id %s was deleted.%nAdditional info:%n%s",
+                        userId,
+                        userDtoConverter.convertToDto(user)),
                 HttpStatus.OK);
     }
 

@@ -5,7 +5,7 @@ import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.entities.Platform;
-import org.jcd2052.api.factories.GameDtoFactory;
+import org.jcd2052.api.factories.GameDtoConverter;
 import org.jcd2052.api.repositories.GameInfoRepository;
 import org.jcd2052.api.exceptions.DeveloperStudioNotFoundException;
 import org.jcd2052.api.exceptions.GameAlreadyExistedException;
@@ -47,6 +47,7 @@ public class GamesController {
     private final DeveloperStudioService developerStudioService;
     private final GameGenreService gameGenreService;
     private final PlatformService platformService;
+    private final GameDtoConverter gameDtoConverter;
 
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> fetchGames(
@@ -58,7 +59,7 @@ public class GamesController {
         Game gameProbe = Game.createGameByIds(genGameId, gameId, platformId, genreId, developerStudioId);
 
         return ResponseFactory.createResponse(
-                GameDtoFactory.createGameDtoList(gameService.fetchGame(gameProbe)),
+                gameDtoConverter.createDtoListFromEntities(gameService.fetchEntities(gameProbe)),
                 HttpStatus.OK);
     }
 
@@ -90,9 +91,9 @@ public class GamesController {
             gameInfoRepository.save(gameInfo);
             gameService.save(game);
 
-            return ResponseFactory.createResponse(GameDtoFactory.createGameDto(game), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(gameDtoConverter.convertToDto(game), HttpStatus.CREATED);
         }
-        throw new GameAlreadyExistedException(GameDtoFactory.createGameDto(gameExisted.get()));
+        throw new GameAlreadyExistedException(gameDtoConverter.convertToDto(gameExisted.get()));
     }
 
     @DeleteMapping(value = "/{gameId}")

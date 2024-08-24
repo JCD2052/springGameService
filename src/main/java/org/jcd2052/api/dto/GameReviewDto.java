@@ -16,4 +16,6 @@ public class GameReviewDto {
     private String comment;
     @JsonFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private LocalDateTime timeCreated;
+    @JsonFormat(pattern = "MM/dd/yyyy HH:mm:ss")
+    private final LocalDateTime timeUpdated;
 }
