@@ -20,6 +20,7 @@ import org.jcd2052.api.utils.converters.UserRoleConvertor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -51,4 +52,13 @@ public class User {
     private String email;
     @OneToMany(mappedBy = "reviewerUser")
     private Set<GameReview> gameReviews;
+
+    public static User createUser(Integer userId, String userName, String email, String userRole) {
+        User user = new User();
+        user.setId(userId);
+        user.setUsername(userName);
+        user.setEmail(email);
+        Optional.ofNullable(userRole).ifPresent(role -> user.setUserRole(UserRole.valueOf(UserRole.class, role)));
+        return user;
+    }
 }

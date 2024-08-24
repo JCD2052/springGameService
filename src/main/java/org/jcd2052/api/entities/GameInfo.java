@@ -41,7 +41,7 @@ public class GameInfo {
 
     @ManyToOne
     @JoinColumn(name = "genre_id")
-    private GameGenre gameGenre;
+    private Genre genre;
 
     @OneToMany(mappedBy = "gameInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

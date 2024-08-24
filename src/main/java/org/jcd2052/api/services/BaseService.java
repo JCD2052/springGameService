@@ -12,12 +12,8 @@ public abstract class BaseService<T> {
         this.repository = repository;
     }
 
-    public Collection<T> fetchAll() {
-        return repository.findAll();
-    }
-
-    public Collection<T> fetchEntities(T entity) {
-        return repository.findAll(Example.of(entity));
+    public Collection<T> fetchEntities(T probe) {
+        return repository.findAll(Example.of(probe));
     }
 
     public void save(T entity) {

@@ -59,18 +59,18 @@ public class Game {
             Integer platformId,
             Integer genreId,
             Integer developerStudioId) {
-        Game gameProbe = new Game();
-        Optional.ofNullable(gameId).ifPresent(gameProbe::setId);
-        Optional.ofNullable(platformId).ifPresent(id -> gameProbe.setPlatform(Platform.builder().id(id).build()));
+        Game game = new Game();
+        game.setId(gameId);
+        Optional.ofNullable(platformId).ifPresent(id -> game.setPlatform(Platform.builder().id(id).build()));
         Optional.ofNullable(genGameId).ifPresent(id -> {
             GameInfo gameInfo = new GameInfo();
             gameInfo.setId(id);
             Optional.ofNullable(genreId)
-                    .ifPresent(gameGenreId -> gameInfo.setGameGenre(GameGenre.builder().id(gameGenreId).build()));
-            gameProbe.setGameInfo(gameInfo);
+                    .ifPresent(gameGenreId -> gameInfo.setGenre(Genre.builder().id(gameGenreId).build()));
+            game.setGameInfo(gameInfo);
         });
         Optional.ofNullable(developerStudioId)
-                .ifPresent(id -> gameProbe.setDeveloperStudio(DeveloperStudio.builder().id(id).build()));
-        return gameProbe;
+                .ifPresent(id -> game.setDeveloperStudio(DeveloperStudio.builder().id(id).build()));
+        return game;
     }
 }

@@ -2,6 +2,7 @@ package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.jcd2052.api.entities.DeveloperStudio;
+import org.jcd2052.api.factories.DeveloperStudioDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.repsonses.ResponseFactory;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -19,14 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeveloperStudiosController {
     private static final String APPLICATION_JSON = "application/json";
     private final DeveloperStudioService developerStudioService;
+    private final DeveloperStudioDtoConverter developerStudioDtoConverter;
 
     @GetMapping(produces = APPLICATION_JSON)
-    public ResponseEntity<BaseResponse> getAllStudios() {
+    public ResponseEntity<BaseResponse> fetchStudios(
+            @RequestParam(required = false) Integer studioId,
+            @RequestParam(required = false) String studioName) {
+        DeveloperStudio developerStudioProbe = DeveloperStudio.createStudio(studioId, studioName);
         return ResponseFactory.createResponse(
-                developerStudioService.fetchAll()
-                        .stream()
-                        .map(DeveloperStudio::toDeveloperStudioDto)
-                        .toList(),
+                developerStudioDtoConverter.createDtoListFromEntities(
+                        developerStudioService.fetchEntities(developerStudioProbe)),
                 HttpStatus.OK);
     }
 }

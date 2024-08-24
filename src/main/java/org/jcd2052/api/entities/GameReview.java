@@ -62,10 +62,10 @@ public class GameReview {
             Integer reviewId,
             Integer userId,
             Integer gameId) {
-        GameReview gameReviewProbe = new GameReview();
-        Optional.ofNullable(reviewId).ifPresent(gameReviewProbe::setId);
-        Optional.ofNullable(gameId).ifPresent(id -> gameReviewProbe.setGame(Game.builder().id(id).build()));
-        Optional.ofNullable(userId).ifPresent(id -> gameReviewProbe.setReviewerUser(User.builder().id(id).build()));
-        return gameReviewProbe;
+        GameReview gameReview = new GameReview();
+        gameReview.setId(reviewId);
+        Optional.ofNullable(gameId).ifPresent(id -> gameReview.setGame(Game.builder().id(id).build()));
+        Optional.ofNullable(userId).ifPresent(id -> gameReview.setReviewerUser(User.builder().id(id).build()));
+        return gameReview;
     }
 }

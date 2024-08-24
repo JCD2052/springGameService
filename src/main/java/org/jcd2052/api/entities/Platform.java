@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.jcd2052.api.dto.PlatformDto;
 
 import java.util.Set;
 
@@ -37,10 +36,7 @@ public class Platform {
     @JsonIgnore
     private Set<Game> games;
 
-    public PlatformDto toPlatformDto() {
-        return PlatformDto.builder()
-                .id(id)
-                .platformName(platformName)
-                .build();
+    public static Platform createPlatform(Integer platformId, String platformName) {
+        return Platform.builder().id(platformId).platformName(platformName).build();
     }
 }

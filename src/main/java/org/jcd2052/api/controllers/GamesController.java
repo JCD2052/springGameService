@@ -57,7 +57,6 @@ public class GamesController {
             @RequestParam(required = false) Integer genreId,
             @RequestParam(required = false) Integer developerStudioId) {
         Game gameProbe = Game.createGameByIds(genGameId, gameId, platformId, genreId, developerStudioId);
-
         return ResponseFactory.createResponse(
                 gameDtoConverter.createDtoListFromEntities(gameService.fetchEntities(gameProbe)),
                 HttpStatus.OK);
@@ -74,7 +73,7 @@ public class GamesController {
                     .orElse(GameInfo.builder()
                             .gameDescription(input.getGameDescription())
                             .gameName(gameName)
-                            .gameGenre(gameGenreService.findGameGenreByIdOrThrowError(input.getGameGenreId()))
+                            .genre(gameGenreService.findGameGenreByIdOrThrowError(input.getGameGenreId()))
                             .build());
 
             DeveloperStudio developerStudio =

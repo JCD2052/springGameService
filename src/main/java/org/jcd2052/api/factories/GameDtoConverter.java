@@ -13,7 +13,7 @@ public class GameDtoConverter implements DtoEntityConverter<Game, GameDto> {
                 .id(entity.getId())
                 .gameName(entity.getGameInfo().getGameName())
                 .description(entity.getGameInfo().getGameDescription())
-                .gameGenre(entity.getGameInfo().getGameGenre().getGenreName())
+                .gameGenre(entity.getGameInfo().getGenre().getGenreName())
                 .platform(entity.getPlatform().getPlatformName())
                 .developerStudio(entity.getDeveloperStudio().getStudioName())
                 .releaseDate(entity.getReleaseDate())

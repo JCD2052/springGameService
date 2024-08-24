@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.jcd2052.api.dto.DeveloperStudioDto;
 
 import java.util.Set;
 
@@ -37,10 +36,10 @@ public class DeveloperStudio {
     @JsonBackReference
     private Set<Game> games;
 
-    public DeveloperStudioDto toDeveloperStudioDto() {
-        return DeveloperStudioDto.builder()
-                .id(id)
-                .developerStudioName(studioName)
+    public static DeveloperStudio createStudio(Integer studioId, String studioName) {
+        return DeveloperStudio.builder()
+                .id(studioId)
+                .studioName(studioName)
                 .build();
     }
 }

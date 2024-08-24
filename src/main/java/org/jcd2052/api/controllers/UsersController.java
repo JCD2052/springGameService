@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -35,8 +36,15 @@ public class UsersController {
     private final UserDtoConverter userDtoConverter;
 
     @GetMapping(produces = APPLICATION_JSON)
-    public ResponseEntity<BaseResponse> getAllUsers() {
-        return ResponseFactory.createResponse(userDtoConverter.createDtoListFromEntities(userService.fetchAll()), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> fetchUsers(
+            @RequestParam Integer userId,
+            @RequestParam String userName,
+            @RequestParam String email,
+            @RequestParam String userRole) {
+        User userProbe = User.createUser(userId, userName, email, userRole);
+        return ResponseFactory.createResponse(
+                userDtoConverter.createDtoListFromEntities(userService.fetchEntities(userProbe)),
+                HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
