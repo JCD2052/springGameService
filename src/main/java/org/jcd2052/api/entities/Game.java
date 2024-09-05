@@ -32,7 +32,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "game")
-public class Game {
+public class Game implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -55,6 +55,7 @@ public class Game {
 
     public static Game createGameByIds(
             Integer genGameId,
+            String gameName,
             Integer gameId,
             Integer platformId,
             Integer genreId,
@@ -62,13 +63,14 @@ public class Game {
         Game game = new Game();
         game.setId(gameId);
         Optional.ofNullable(platformId).ifPresent(id -> game.setPlatform(Platform.builder().id(id).build()));
-        Optional.ofNullable(genGameId).ifPresent(id -> {
-            GameInfo gameInfo = new GameInfo();
-            gameInfo.setId(id);
-            Optional.ofNullable(genreId)
-                    .ifPresent(gameGenreId -> gameInfo.setGenre(Genre.builder().id(gameGenreId).build()));
-            game.setGameInfo(gameInfo);
-        });
+
+        GameInfo gameInfo = new GameInfo();
+        gameInfo.setId(genGameId);
+        gameInfo.setGameName(gameName);
+        Optional.ofNullable(genreId)
+                .ifPresent(gameGenreId -> gameInfo.setGenre(Genre.builder().id(gameGenreId).build()));
+        game.setGameInfo(gameInfo);
+
         Optional.ofNullable(developerStudioId)
                 .ifPresent(id -> game.setDeveloperStudio(DeveloperStudio.builder().id(id).build()));
         return game;

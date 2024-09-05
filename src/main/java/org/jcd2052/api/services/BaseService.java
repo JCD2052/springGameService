@@ -1,11 +1,14 @@
 package org.jcd2052.api.services;
 
+import org.jcd2052.api.entities.IEntity;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class BaseService<T> {
+public abstract class BaseService<T extends IEntity> {
     protected final JpaRepository<T, Integer> repository;
 
     protected BaseService(JpaRepository<T, Integer> repository) {
@@ -13,7 +16,9 @@ public abstract class BaseService<T> {
     }
 
     public Collection<T> fetchEntities(T probe) {
-        return repository.findAll(Example.of(probe));
+        return fetchEntities(Example.of(
+                probe,
+                ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)));
     }
 
     public void save(T entity) {
@@ -22,5 +27,9 @@ public abstract class BaseService<T> {
 
     public void delete(T entity) {
         repository.delete(entity);
+    }
+
+    protected Collection<T> fetchEntities(Example<T> example) {
+        return example.getProbe().areObjectFieldsEmpty() ? new ArrayList<>() : repository.findAll(example);
     }
 }

@@ -6,7 +6,6 @@ import org.jcd2052.api.dto.GameReviewDtoInput;
 import org.jcd2052.api.dto.GameReviewDtoUpdateInput;
 import org.jcd2052.api.entities.GameReview;
 import org.jcd2052.api.exceptions.GameReviewExistsException;
-import org.jcd2052.api.exceptions.GameReviewNotFoundException;
 import org.jcd2052.api.exceptions.GameReviewScoreException;
 import org.jcd2052.api.factories.GameReviewsDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +32,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/gameReviews")
-@Transactional
 public class GameReviewController {
     private static final String APPLICATION_JSON = "application/json";
     private static final double MIN_SCORE = 0;
@@ -56,6 +53,7 @@ public class GameReviewController {
                 HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> createReview(@RequestBody GameReviewDtoInput input) {
         Double score = input.getScore();
@@ -83,6 +81,7 @@ public class GameReviewController {
                 gameReviewsDtoConverter.convertToDto(gameReviewByGameIdAndReviewerUserId.get()));
     }
 
+    @Transactional
     @PutMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON, value = "/{reviewId}")
     public ResponseEntity<BaseResponse> updateReview(
             @PathVariable int reviewId,
@@ -99,35 +98,23 @@ public class GameReviewController {
         return ResponseFactory.createResponse(gameReviewsDtoConverter.convertToDto(gameReview), HttpStatus.OK);
     }
 
+    @Transactional
     @DeleteMapping(produces = APPLICATION_JSON, value = "/{reviewId}")
     public ResponseEntity<BaseResponse> deleteReview(@PathVariable int reviewId) {
         GameReview gameReview = gameReviewsService.findReviewByIdOrThrowError(reviewId);
         gameReviewsService.delete(gameReview);
         return ResponseFactory.createResponse(
-                String.format("Review %d has been deleted successfully", reviewId),
+                "Review %d has been deleted successfully".formatted(reviewId),
                 HttpStatus.OK);
     }
 
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handeGameReviewNotFoundException(GameReviewNotFoundException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handeGameReviewExistsException(GameReviewExistsException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handeGameReviewScoreException(GameReviewScoreException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
     private static void validateScore(Double score) {
-        Optional.ofNullable(score).ifPresent(s -> {
-            if (score < MIN_SCORE || score > MAX_SCORE) {
+        Optional.ofNullable(score).ifPresentOrElse(value -> {
+            if (value < MIN_SCORE || value > MAX_SCORE) {
                 throw new GameReviewScoreException(score);
             }
+        }, () -> {
+            throw new GameReviewScoreException();
         });
     }
 }

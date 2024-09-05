@@ -4,8 +4,6 @@ import org.jcd2052.api.dto.GameDto;
 import org.jcd2052.api.entities.Game;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-
 @Component
 public class GameDtoConverter implements DtoEntityConverter<Game, GameDto> {
     public GameDto convertToDto(Game entity) {
@@ -18,10 +16,5 @@ public class GameDtoConverter implements DtoEntityConverter<Game, GameDto> {
                 .developerStudio(entity.getDeveloperStudio().getStudioName())
                 .releaseDate(entity.getReleaseDate())
                 .build();
-    }
-
-    @Override
-    public Comparator<GameDto> createDtoComparator() {
-        return Comparator.comparing(GameDto::getId);
     }
 }

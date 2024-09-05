@@ -27,7 +27,7 @@ public class GameReviewsDtoConverter implements DtoEntityConverter<GameReview, G
     }
 
     @Override
-    public Comparator<GameReviewDto> createDtoComparator() {
-        return Comparator.comparing(GameReviewDto::getScore);
+    public Comparator<GameReview> createDtoComparator() {
+        return Comparator.comparing(GameReview::getScore);
     }
 }

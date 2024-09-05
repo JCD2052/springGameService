@@ -13,21 +13,23 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name = "game_info")
-public class GameInfo {
+public class GameInfo implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -46,9 +48,6 @@ public class GameInfo {
     @OneToMany(mappedBy = "gameInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonBackReference
-    private Set<Game> games;
-
-    public Set<Game> getGames() {
-        return Optional.ofNullable(games).orElse(new HashSet<>());
-    }
+    @Builder.Default
+    private Set<Game> games = new HashSet<>();
 }

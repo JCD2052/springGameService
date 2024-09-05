@@ -1,28 +1,27 @@
 package org.jcd2052.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
-
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "platform")
-public class Platform {
+public class Platform implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,11 +29,6 @@ public class Platform {
 
     @Column(name = "platform_name", unique = true)
     private String platformName;
-
-    @OneToMany(mappedBy = "platform")
-    @ToString.Exclude
-    @JsonIgnore
-    private Set<Game> games;
 
     public static Platform createPlatform(Integer platformId, String platformName) {
         return Platform.builder().id(platformId).platformName(platformName).build();

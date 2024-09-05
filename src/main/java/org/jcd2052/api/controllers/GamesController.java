@@ -7,11 +7,7 @@ import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.entities.Platform;
 import org.jcd2052.api.factories.GameDtoConverter;
 import org.jcd2052.api.repositories.GameInfoRepository;
-import org.jcd2052.api.exceptions.DeveloperStudioNotFoundException;
 import org.jcd2052.api.exceptions.GameAlreadyExistedException;
-import org.jcd2052.api.exceptions.GameGenreNotFoundException;
-import org.jcd2052.api.exceptions.GameNotFoundException;
-import org.jcd2052.api.exceptions.PlatformNotFoundException;
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.services.GameService;
@@ -23,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,14 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/games")
-@Transactional
 public class GamesController {
     private static final String APPLICATION_JSON = "application/json";
     private final GameInfoRepository gameInfoRepository;
@@ -52,16 +45,18 @@ public class GamesController {
     @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> fetchGames(
             @RequestParam(required = false) Integer genGameId,
+            @RequestParam(required = false) String gameName,
             @RequestParam(required = false) Integer gameId,
             @RequestParam(required = false) Integer platformId,
             @RequestParam(required = false) Integer genreId,
             @RequestParam(required = false) Integer developerStudioId) {
-        Game gameProbe = Game.createGameByIds(genGameId, gameId, platformId, genreId, developerStudioId);
+        Game gameProbe = Game.createGameByIds(genGameId, gameName, gameId, platformId, genreId, developerStudioId);
         return ResponseFactory.createResponse(
                 gameDtoConverter.createDtoListFromEntities(gameService.fetchEntities(gameProbe)),
                 HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameDtoInput input) {
         String gameName = input.getName();
@@ -95,6 +90,7 @@ public class GamesController {
         throw new GameAlreadyExistedException(gameDtoConverter.convertToDto(gameExisted.get()));
     }
 
+    @Transactional
     @DeleteMapping(value = "/{gameId}")
     public ResponseEntity<BaseResponse> deleteGame(@PathVariable int gameId) {
         Game gameToDelete = gameService.getGameByIdOrThrowError(gameId);
@@ -107,38 +103,5 @@ public class GamesController {
         }
 
         return ResponseFactory.createResponse(String.format("Game -- %d has been deleted.", gameId), HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleGenreNotFoundException(GameGenreNotFoundException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handeDeveloperStudioNotFoundException(
-            DeveloperStudioNotFoundException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleGameNotFoundException(GameNotFoundException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleGameAlreadyExistedException(
-            GameAlreadyExistedException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handlePlatformNotFoundException(
-            PlatformNotFoundException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleDuplicateException(SQLException exception) {
-        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
