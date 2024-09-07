@@ -1,4 +1,4 @@
-package org.jcd2052.api.exceptions;
+package org.jcd2052.api.exceptionhandler.exceptions;
 
 public class GameNotFoundException extends RuntimeException {
     public GameNotFoundException(int id) {

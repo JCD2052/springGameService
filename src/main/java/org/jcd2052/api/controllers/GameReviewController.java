@@ -2,12 +2,14 @@ package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jcd2052.api.constants.ApiConstants;
+import org.jcd2052.api.constants.GameReviewConstants;
 import org.jcd2052.api.dto.GameReviewDtoInput;
 import org.jcd2052.api.dto.GameReviewDtoUpdateInput;
 import org.jcd2052.api.entities.GameReview;
-import org.jcd2052.api.exceptions.GameReviewExistsException;
-import org.jcd2052.api.exceptions.GameReviewScoreException;
-import org.jcd2052.api.factories.GameReviewsDtoConverter;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewExistsException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewScoreException;
+import org.jcd2052.api.dtoconverters.GameReviewsDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.jcd2052.api.services.GameReviewsService;
@@ -33,15 +35,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/gameReviews")
 public class GameReviewController {
-    private static final String APPLICATION_JSON = "application/json";
-    private static final double MIN_SCORE = 0;
-    private static final double MAX_SCORE = 10;
     private final GameReviewsService gameReviewsService;
     private final UserService userService;
     private final GameService gameService;
     private final GameReviewsDtoConverter gameReviewsDtoConverter;
 
-    @GetMapping(produces = APPLICATION_JSON)
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGameReviews(
             @RequestParam(required = false) Integer reviewId,
             @RequestParam(required = false) Integer userId,
@@ -54,7 +53,7 @@ public class GameReviewController {
     }
 
     @Transactional
-    @PostMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
+    @PostMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, consumes = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> createReview(@RequestBody GameReviewDtoInput input) {
         Double score = input.getScore();
         validateScore(score);
@@ -82,7 +81,10 @@ public class GameReviewController {
     }
 
     @Transactional
-    @PutMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON, value = "/{reviewId}")
+    @PutMapping(
+            produces = ApiConstants.APPLICATION_CONTENT_TYPE,
+            consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
+            value = "/{reviewId}")
     public ResponseEntity<BaseResponse> updateReview(
             @PathVariable int reviewId,
             @RequestBody GameReviewDtoUpdateInput input) {
@@ -99,7 +101,7 @@ public class GameReviewController {
     }
 
     @Transactional
-    @DeleteMapping(produces = APPLICATION_JSON, value = "/{reviewId}")
+    @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{reviewId}")
     public ResponseEntity<BaseResponse> deleteReview(@PathVariable int reviewId) {
         GameReview gameReview = gameReviewsService.findReviewByIdOrThrowError(reviewId);
         gameReviewsService.delete(gameReview);
@@ -110,7 +112,7 @@ public class GameReviewController {
 
     private static void validateScore(Double score) {
         Optional.ofNullable(score).ifPresentOrElse(value -> {
-            if (value < MIN_SCORE || value > MAX_SCORE) {
+            if (value < GameReviewConstants.MIN_SCORE || value > GameReviewConstants.MAX_SCORE) {
                 throw new GameReviewScoreException(score);
             }
         }, () -> {

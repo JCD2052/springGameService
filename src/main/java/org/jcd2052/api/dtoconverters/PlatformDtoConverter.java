@@ -1,4 +1,4 @@
-package org.jcd2052.api.factories;
+package org.jcd2052.api.dtoconverters;
 
 import org.jcd2052.api.dto.PlatformDto;
 import org.jcd2052.api.entities.Platform;

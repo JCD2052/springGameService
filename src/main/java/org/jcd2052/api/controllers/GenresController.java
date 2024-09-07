@@ -1,8 +1,9 @@
 package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.Genre;
-import org.jcd2052.api.factories.GenreDtoConverter;
+import org.jcd2052.api.dtoconverters.GenreDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.repsonses.ResponseFactory;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/genres")
 @Transactional(readOnly = true)
 public class GenresController {
-    private static final String APPLICATION_JSON = "application/json";
     private final GameGenreService gameGenreService;
     private final GenreDtoConverter genreDtoConverter;
 
-    @GetMapping(produces = APPLICATION_JSON)
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGenres(
             @RequestParam(required = false) Integer genreId,
             @RequestParam(required = false) String genreName) {

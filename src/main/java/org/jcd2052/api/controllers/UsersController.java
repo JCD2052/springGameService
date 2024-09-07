@@ -2,11 +2,12 @@ package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.UserDtoInput;
-import org.jcd2052.api.factories.UserDtoConverter;
+import org.jcd2052.api.dtoconverters.UserDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.exceptions.UserAlreadyCreatedException;
+import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.services.UserService;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.http.HttpStatus;
@@ -28,11 +29,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
-    private static final String APPLICATION_JSON = "application/json";
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
 
-    @GetMapping(produces = APPLICATION_JSON)
+    //TODO make this request for admin only
+    //TODO add find by userId
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchUsers(
             @RequestParam(required = false) Integer userId,
             @RequestParam(required = false) String userName,
@@ -44,7 +46,7 @@ public class UsersController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     @Transactional
     public ResponseEntity<BaseResponse> createUser(@RequestBody UserDtoInput input) {
         String username = input.getUsername();
@@ -64,7 +66,10 @@ public class UsersController {
     }
 
     @Transactional
-    @PutMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON, value = "/{userId}")
+    @PutMapping(
+            consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
+            produces = ApiConstants.APPLICATION_CONTENT_TYPE,
+            value = "/{userId}")
     public ResponseEntity<BaseResponse> updateUser(@PathVariable int userId, @RequestBody UserDtoInput input) {
         String username = Optional.ofNullable(input.getUsername()).orElse(StringUtils.EMPTY);
         String email = Optional.ofNullable(input.getEmail()).orElse(StringUtils.EMPTY);
@@ -86,7 +91,10 @@ public class UsersController {
     }
 
     @Transactional
-    @DeleteMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON, value = "/{userId}")
+    @DeleteMapping(
+            consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
+            produces = ApiConstants.APPLICATION_CONTENT_TYPE,
+            value = "/{userId}")
     public ResponseEntity<BaseResponse> deleteUserById(@PathVariable int userId) {
         User user = userService.findByIdOrThrowError(userId);
         userService.delete(user);

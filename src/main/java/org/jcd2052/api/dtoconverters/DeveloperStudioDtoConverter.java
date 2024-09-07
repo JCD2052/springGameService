@@ -1,4 +1,4 @@
-package org.jcd2052.api.factories;
+package org.jcd2052.api.dtoconverters;
 
 import org.jcd2052.api.dto.DeveloperStudioDto;
 import org.jcd2052.api.entities.DeveloperStudio;

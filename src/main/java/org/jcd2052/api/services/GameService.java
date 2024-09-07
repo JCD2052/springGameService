@@ -2,15 +2,25 @@ package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.repositories.GameRepository;
-import org.jcd2052.api.exceptions.GameNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameNotFoundException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class GameService extends BaseService<Game> {
     protected GameService(GameRepository repository) {
         super(repository);
+    }
+
+    @Override
+    public Collection<Game> fetchEntities(Game probe) {
+        return super.fetchEntities(Example.of(
+                probe,
+                ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)));
     }
 
     public Game getGameByIdOrThrowError(int gameId) {

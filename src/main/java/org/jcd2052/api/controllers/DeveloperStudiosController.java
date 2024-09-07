@@ -1,8 +1,9 @@
 package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.DeveloperStudio;
-import org.jcd2052.api.factories.DeveloperStudioDtoConverter;
+import org.jcd2052.api.dtoconverters.DeveloperStudioDtoConverter;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.repsonses.ResponseFactory;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/studios")
 @Transactional(readOnly = true)
 public class DeveloperStudiosController {
-    private static final String APPLICATION_JSON = "application/json";
     private final DeveloperStudioService developerStudioService;
     private final DeveloperStudioDtoConverter developerStudioDtoConverter;
 
-    @GetMapping(produces = APPLICATION_JSON)
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchStudios(
             @RequestParam(required = false) Integer studioId,
             @RequestParam(required = false) String studioName) {

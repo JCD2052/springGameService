@@ -1,7 +1,7 @@
 package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.GameReview;
-import org.jcd2052.api.exceptions.GameReviewNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewNotFoundException;
 import org.jcd2052.api.repositories.GameReviewsRepository;
 import org.springframework.stereotype.Service;
 

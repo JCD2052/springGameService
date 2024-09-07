@@ -2,7 +2,6 @@ package org.jcd2052.api.services;
 
 import org.jcd2052.api.entities.IEntity;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
@@ -16,9 +15,7 @@ public abstract class BaseService<T extends IEntity> {
     }
 
     public Collection<T> fetchEntities(T probe) {
-        return fetchEntities(Example.of(
-                probe,
-                ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)));
+        return fetchEntities(Example.of(probe));
     }
 
     public void save(T entity) {

@@ -1,15 +1,15 @@
-package org.jcd2052.api.utils;
+package org.jcd2052.api.exceptionhandler;
 
-import org.jcd2052.api.exceptions.DeveloperStudioNotFoundException;
-import org.jcd2052.api.exceptions.GameAlreadyExistedException;
-import org.jcd2052.api.exceptions.GameGenreNotFoundException;
-import org.jcd2052.api.exceptions.GameNotFoundException;
-import org.jcd2052.api.exceptions.GameReviewExistsException;
-import org.jcd2052.api.exceptions.GameReviewNotFoundException;
-import org.jcd2052.api.exceptions.GameReviewScoreException;
-import org.jcd2052.api.exceptions.PlatformNotFoundException;
-import org.jcd2052.api.exceptions.UserAlreadyCreatedException;
-import org.jcd2052.api.exceptions.UserNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.DeveloperStudioNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameAlreadyExistedException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameGenreNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewExistsException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameReviewScoreException;
+import org.jcd2052.api.exceptionhandler.exceptions.PlatformNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
+import org.jcd2052.api.exceptionhandler.exceptions.UserNotFoundException;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.http.HttpStatus;

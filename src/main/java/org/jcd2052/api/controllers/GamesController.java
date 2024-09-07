@@ -1,13 +1,14 @@
 package org.jcd2052.api.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.entities.GameInfo;
 import org.jcd2052.api.entities.Platform;
-import org.jcd2052.api.factories.GameDtoConverter;
+import org.jcd2052.api.dtoconverters.GameDtoConverter;
 import org.jcd2052.api.repositories.GameInfoRepository;
-import org.jcd2052.api.exceptions.GameAlreadyExistedException;
+import org.jcd2052.api.exceptionhandler.exceptions.GameAlreadyExistedException;
 import org.jcd2052.api.services.DeveloperStudioService;
 import org.jcd2052.api.services.GameGenreService;
 import org.jcd2052.api.services.GameService;
@@ -34,7 +35,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/games")
 public class GamesController {
-    private static final String APPLICATION_JSON = "application/json";
     private final GameInfoRepository gameInfoRepository;
     private final GameService gameService;
     private final DeveloperStudioService developerStudioService;
@@ -42,7 +42,7 @@ public class GamesController {
     private final PlatformService platformService;
     private final GameDtoConverter gameDtoConverter;
 
-    @GetMapping(produces = APPLICATION_JSON)
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGames(
             @RequestParam(required = false) Integer genGameId,
             @RequestParam(required = false) String gameName,
@@ -57,7 +57,7 @@ public class GamesController {
     }
 
     @Transactional
-    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameDtoInput input) {
         String gameName = input.getName();
         int platformId = input.getPlatformId();
@@ -91,7 +91,7 @@ public class GamesController {
     }
 
     @Transactional
-    @DeleteMapping(value = "/{gameId}")
+    @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{gameId}")
     public ResponseEntity<BaseResponse> deleteGame(@PathVariable int gameId) {
         Game gameToDelete = gameService.getGameByIdOrThrowError(gameId);
         GameInfo gameInfo = gameToDelete.getGameInfo();
