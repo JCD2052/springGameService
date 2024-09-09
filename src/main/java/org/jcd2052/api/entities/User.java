@@ -1,34 +1,39 @@
 package org.jcd2052.api.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Generated;
-import org.jcd2052.api.dto.UserDto;
-import org.jcd2052.api.utils.converters.UserRoleConvertor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "\"user\"")
-public class User {
+public class User implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -36,7 +41,7 @@ public class User {
     @NotNull
     @Column(name = "username", nullable = false, length = Integer.MAX_VALUE)
     private String username;
-    @Convert(converter = UserRoleConvertor.class)
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @Column(name = "time_created")
     @Generated
@@ -49,15 +54,15 @@ public class User {
     @NotNull
     @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
+    @OneToMany(mappedBy = "reviewerUser")
+    private Set<GameReview> gameReviews;
 
-    @Transient
-    public UserDto toUserDto() {
-        return UserDto.builder()
-                .id(id)
-                .email(email)
-                .username(username)
-                .userRole(userRole.name())
-                .timeCreated(timeCreated)
-                .build();
+    public static User createUser(Integer userId, String userName, String email, String userRole) {
+        User user = new User();
+        user.setId(userId);
+        user.setUsername(userName);
+        user.setEmail(email);
+        Optional.ofNullable(userRole).ifPresent(role -> user.setUserRole(UserRole.valueOf(UserRole.class, role)));
+        return user;
     }
 }

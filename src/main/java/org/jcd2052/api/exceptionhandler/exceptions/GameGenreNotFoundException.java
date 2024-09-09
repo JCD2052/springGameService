@@ -1,4 +1,4 @@
-package org.jcd2052.api.repsonses.exceptionhandler.exception;
+package org.jcd2052.api.exceptionhandler.exceptions;
 
 public class GameGenreNotFoundException extends RuntimeException {
     public GameGenreNotFoundException(int genreId) {

@@ -1,48 +1,74 @@
 package org.jcd2052.api.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.UserDtoInput;
-import org.jcd2052.api.factories.UserDtoFactory;
+import org.jcd2052.api.dtoconverters.UserDtoConverter;
+import org.jcd2052.api.entities.UserDetails;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.UserAlreadyCreatedException;
-import org.jcd2052.api.repsonses.exceptionhandler.exception.UserNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.services.UserService;
-import org.jcd2052.api.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-@Transactional
 public class UsersController {
-    private static final String APPLICATION_JSON = "application/json";
     private final UserService userService;
+    private final UserDtoConverter userDtoConverter;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UsersController(UserService userService) {
-        this.userService = userService;
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
+    public ResponseEntity<BaseResponse> fetchUsers(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String userRole) {
+        User userProbe = User.createUser(userId, userName, email, userRole);
+        return ResponseFactory.createResponse(
+                userDtoConverter.createDtoListFromEntities(userService.fetchEntities(userProbe)),
+                HttpStatus.OK);
     }
 
-    @GetMapping(produces = APPLICATION_JSON)
-    public ResponseEntity<BaseResponse> getAllUsers() {
-        return Utils.createResponse(UserDtoFactory.createUserDtoList(userService.findAll()), HttpStatus.OK);
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{id}")
+    public ResponseEntity<BaseResponse> getUserById(@PathVariable("id") int userId) {
+        return ResponseFactory.createResponse(
+                userDtoConverter.convertToDto(userService.findByIdOrThrowError(userId)),
+                HttpStatus.OK);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/me")
+    public ResponseEntity<BaseResponse> getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails authenticatedUser = (UserDetails) authentication.getPrincipal();
+        return ResponseFactory.createResponse(
+                userDtoConverter.convertToDto(userService.findUserByNameOrEmailOrThrowError(
+                        authenticatedUser.getUsername(),
+                        StringUtils.EMPTY)),
+                HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
+    @Transactional
     public ResponseEntity<BaseResponse> createUser(@RequestBody UserDtoInput input) {
         String username = input.getUsername();
         String email = input.getEmail();
@@ -50,23 +76,26 @@ public class UsersController {
         if (!userService.isUserExistedByNameOrEmail(username, email)) {
             User user = User.builder()
                     .username(username)
-                    .password(input.getPassword())
+                    .password(passwordEncoder.encode(input.getPassword()))
                     .email(email)
                     .userRole(input.getRoleName())
                     .build();
             userService.save(user);
-            return Utils.createResponse(user.toUserDto(), HttpStatus.CREATED);
+            return ResponseFactory.createResponse(userDtoConverter.convertToDto(user), HttpStatus.CREATED);
         }
         throw new UserAlreadyCreatedException(username, email);
     }
 
-    @PutMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON, value = "/{userId}")
+    @Transactional
+    @PutMapping(
+            consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
+            produces = ApiConstants.APPLICATION_CONTENT_TYPE,
+            value = "/{userId}")
     public ResponseEntity<BaseResponse> updateUser(@PathVariable int userId, @RequestBody UserDtoInput input) {
         String username = Optional.ofNullable(input.getUsername()).orElse(StringUtils.EMPTY);
         String email = Optional.ofNullable(input.getEmail()).orElse(StringUtils.EMPTY);
-        Optional<User> userByNameOrEmail = userService.findUserByNameOrEmail(username, email);
 
-        if (userByNameOrEmail.isEmpty()) {
+        if (userService.isUserExistedByNameOrEmail(username, email)) {
             User user = userService.findByIdOrThrowError(userId);
             Optional.ofNullable(input.getUsername()).ifPresent(user::setUsername);
             Optional.ofNullable(input.getEmail()).ifPresent(user::setEmail);
@@ -74,27 +103,25 @@ public class UsersController {
             Optional.ofNullable(input.getRoleName()).ifPresent(user::setUserRole);
             userService.save(user);
 
-            return Utils.createResponse(String.format("Updated. %s", user.toUserDto()), HttpStatus.OK);
+            return ResponseFactory.createResponse(
+                    "Updated. %s".formatted(userDtoConverter.convertToDto(user)),
+                    HttpStatus.OK);
         }
-        throw new UserAlreadyCreatedException(userByNameOrEmail.get().toUserDto());
+        throw new UserAlreadyCreatedException(username, email);
     }
 
-    @DeleteMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON, value = "/{userId}")
+    @Transactional
+    @DeleteMapping(
+            consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
+            produces = ApiConstants.APPLICATION_CONTENT_TYPE,
+            value = "/{userId}")
     public ResponseEntity<BaseResponse> deleteUserById(@PathVariable int userId) {
         User user = userService.findByIdOrThrowError(userId);
         userService.delete(user);
-        return Utils.createResponse(
-                String.format("User with id %s was deleted.%nAdditional info:%n%s", userId, user.toUserDto()),
+        return ResponseFactory.createResponse(
+                "User with id %s was deleted.%nAdditional info:%n%s".formatted(
+                        userId,
+                        userDtoConverter.convertToDto(user)),
                 HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleUserNotFoundException(UserNotFoundException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BaseResponse> handleUserAlreadyCreatedException(UserAlreadyCreatedException exception) {
-        return Utils.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
