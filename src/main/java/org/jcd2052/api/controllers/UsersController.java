@@ -6,12 +6,16 @@ import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.UserDtoInput;
 import org.jcd2052.api.dtoconverters.UserDtoConverter;
+import org.jcd2052.api.entities.UserDetails;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.services.UserService;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +35,8 @@ import java.util.Optional;
 public class UsersController {
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
+    private final PasswordEncoder passwordEncoder;
 
-    //TODO make this request for admin only
-    //TODO add find by userId
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchUsers(
             @RequestParam(required = false) Integer userId,
@@ -46,6 +49,24 @@ public class UsersController {
                 HttpStatus.OK);
     }
 
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{id}")
+    public ResponseEntity<BaseResponse> getUserById(@PathVariable("id") int userId) {
+        return ResponseFactory.createResponse(
+                userDtoConverter.convertToDto(userService.findByIdOrThrowError(userId)),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/me")
+    public ResponseEntity<BaseResponse> getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails authenticatedUser = (UserDetails) authentication.getPrincipal();
+        return ResponseFactory.createResponse(
+                userDtoConverter.convertToDto(userService.findUserByNameOrEmailOrThrowError(
+                        authenticatedUser.getUsername(),
+                        StringUtils.EMPTY)),
+                HttpStatus.OK);
+    }
+
     @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     @Transactional
     public ResponseEntity<BaseResponse> createUser(@RequestBody UserDtoInput input) {
@@ -55,7 +76,7 @@ public class UsersController {
         if (!userService.isUserExistedByNameOrEmail(username, email)) {
             User user = User.builder()
                     .username(username)
-                    .password(input.getPassword())
+                    .password(passwordEncoder.encode(input.getPassword()))
                     .email(email)
                     .userRole(input.getRoleName())
                     .build();
@@ -73,9 +94,8 @@ public class UsersController {
     public ResponseEntity<BaseResponse> updateUser(@PathVariable int userId, @RequestBody UserDtoInput input) {
         String username = Optional.ofNullable(input.getUsername()).orElse(StringUtils.EMPTY);
         String email = Optional.ofNullable(input.getEmail()).orElse(StringUtils.EMPTY);
-        Optional<User> userByNameOrEmail = userService.findUserByNameOrEmail(username, email);
 
-        if (userByNameOrEmail.isEmpty()) {
+        if (userService.isUserExistedByNameOrEmail(username, email)) {
             User user = userService.findByIdOrThrowError(userId);
             Optional.ofNullable(input.getUsername()).ifPresent(user::setUsername);
             Optional.ofNullable(input.getEmail()).ifPresent(user::setEmail);
@@ -87,7 +107,7 @@ public class UsersController {
                     "Updated. %s".formatted(userDtoConverter.convertToDto(user)),
                     HttpStatus.OK);
         }
-        throw new UserAlreadyCreatedException(userDtoConverter.convertToDto(userByNameOrEmail.get()));
+        throw new UserAlreadyCreatedException(username, email);
     }
 
     @Transactional
