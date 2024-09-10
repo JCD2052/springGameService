@@ -1,6 +1,6 @@
 package org.jcd2052.api.dtoconverters;
 
-import org.jcd2052.api.dto.PlatformDto;
+import org.jcd2052.api.dto.output.PlatformDto;
 import org.jcd2052.api.entities.Platform;
 import org.springframework.stereotype.Component;
 

@@ -1,11 +1,18 @@
 package org.jcd2052.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.constants.GameReviewConstants;
-import org.jcd2052.api.dto.GameReviewDtoInput;
-import org.jcd2052.api.dto.GameReviewDtoUpdateInput;
+import org.jcd2052.api.dto.input.GameReviewDtoInput;
+import org.jcd2052.api.dto.input.GameReviewDtoUpdateInput;
+import org.jcd2052.api.dto.output.AuthTokenDto;
 import org.jcd2052.api.entities.GameReview;
 import org.jcd2052.api.exceptionhandler.exceptions.GameReviewExistsException;
 import org.jcd2052.api.exceptionhandler.exceptions.GameReviewScoreException;
@@ -34,12 +41,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/gameReviews")
+@Tag(name = "Review")
 public class GameReviewController {
     private final GameReviewsService gameReviewsService;
     private final UserService userService;
     private final GameService gameService;
     private final GameReviewsDtoConverter gameReviewsDtoConverter;
 
+    @Operation(summary = "Fetch game review records")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {@Content(schema = @Schema(name = "Authentication response",
+                            implementation = AuthTokenDto.class),
+                            mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)}),
+            @ApiResponse(
+                    description = "Response when authentication failed",
+                    responseCode = "404",
+                    content = {@Content(mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGameReviews(
             @RequestParam(required = false) Integer reviewId,
@@ -52,6 +71,7 @@ public class GameReviewController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Create game review")
     @Transactional
     @PostMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, consumes = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> createReview(@RequestBody GameReviewDtoInput input) {
@@ -80,6 +100,7 @@ public class GameReviewController {
                 gameReviewsDtoConverter.convertToDto(gameReviewByGameIdAndReviewerUserId.get()));
     }
 
+    @Operation(summary = "Update the certain game review")
     @Transactional
     @PutMapping(
             produces = ApiConstants.APPLICATION_CONTENT_TYPE,
@@ -100,6 +121,7 @@ public class GameReviewController {
         return ResponseFactory.createResponse(gameReviewsDtoConverter.convertToDto(gameReview), HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete the certain game review")
     @Transactional
     @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{reviewId}")
     public ResponseEntity<BaseResponse> deleteReview(@PathVariable int reviewId) {

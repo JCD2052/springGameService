@@ -1,7 +1,14 @@
 package org.jcd2052.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.jcd2052.api.constants.ApiConstants;
+import org.jcd2052.api.dto.output.GameDto;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.jcd2052.api.entities.Game;
 import org.jcd2052.api.entities.GameInfo;
@@ -15,7 +22,7 @@ import org.jcd2052.api.services.GameService;
 import org.jcd2052.api.services.PlatformService;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.jcd2052.api.repsonses.BaseResponse;
-import org.jcd2052.api.dto.GameDtoInput;
+import org.jcd2052.api.dto.input.GameDtoInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +41,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/games")
+@Tag(name = "Games")
 public class GamesController {
     private final GameInfoRepository gameInfoRepository;
     private final GameService gameService;
@@ -42,6 +50,14 @@ public class GamesController {
     private final PlatformService platformService;
     private final GameDtoConverter gameDtoConverter;
 
+    @Operation(summary = "Fetch game records")
+    @ApiResponses({
+            @ApiResponse(
+                    description = "Fetch games by parameters or returns an empty list",
+                    responseCode = "200",
+                    content = {@Content(schema = @Schema(name = "Game records response",
+                            implementation = GameDto.class),
+                            mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGames(
             @RequestParam(required = false) Integer genGameId,
@@ -56,6 +72,7 @@ public class GamesController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Create a game record")
     @Transactional
     @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameDtoInput input) {
@@ -90,6 +107,7 @@ public class GamesController {
         throw new GameAlreadyExistedException(gameDtoConverter.convertToDto(gameExisted.get()));
     }
 
+    @Operation(summary = "Delete the certain game record")
     @Transactional
     @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{gameId}")
     public ResponseEntity<BaseResponse> deleteGame(@PathVariable int gameId) {

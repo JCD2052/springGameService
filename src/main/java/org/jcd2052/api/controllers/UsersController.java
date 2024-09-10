@@ -1,10 +1,12 @@
 package org.jcd2052.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.User;
-import org.jcd2052.api.dto.UserDtoInput;
+import org.jcd2052.api.dto.input.UserDtoInput;
 import org.jcd2052.api.dtoconverters.UserDtoConverter;
 import org.jcd2052.api.entities.UserDetails;
 import org.jcd2052.api.repsonses.BaseResponse;
@@ -32,11 +34,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "Users")
 public class UsersController {
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
     private final PasswordEncoder passwordEncoder;
 
+    @Operation(summary = "Fetch users records")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchUsers(
             @RequestParam(required = false) Integer userId,
@@ -49,6 +53,7 @@ public class UsersController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Fetch the certain user record")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{id}")
     public ResponseEntity<BaseResponse> getUserById(@PathVariable("id") int userId) {
         return ResponseFactory.createResponse(
@@ -56,6 +61,7 @@ public class UsersController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Fetch the authenticated user record")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/me")
     public ResponseEntity<BaseResponse> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,6 +73,7 @@ public class UsersController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Create a user record")
     @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     @Transactional
     public ResponseEntity<BaseResponse> createUser(@RequestBody UserDtoInput input) {
@@ -86,6 +93,7 @@ public class UsersController {
         throw new UserAlreadyCreatedException(username, email);
     }
 
+    @Operation(summary = "Update the certain user record")
     @Transactional
     @PutMapping(
             consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
@@ -110,6 +118,7 @@ public class UsersController {
         throw new UserAlreadyCreatedException(username, email);
     }
 
+    @Operation(summary = "Delete the certain user record")
     @Transactional
     @DeleteMapping(
             consumes = ApiConstants.APPLICATION_CONTENT_TYPE,

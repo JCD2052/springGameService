@@ -1,6 +1,6 @@
 package org.jcd2052.api.dtoconverters;
 
-import org.jcd2052.api.dto.GameDto;
+import org.jcd2052.api.dto.output.GameDto;
 import org.jcd2052.api.entities.Game;
 import org.springframework.stereotype.Component;
 

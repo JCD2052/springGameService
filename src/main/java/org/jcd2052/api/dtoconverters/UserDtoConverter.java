@@ -1,6 +1,6 @@
 package org.jcd2052.api.dtoconverters;
 
-import org.jcd2052.api.dto.UserDto;
+import org.jcd2052.api.dto.output.UserDto;
 import org.jcd2052.api.entities.User;
 import org.springframework.stereotype.Component;
 

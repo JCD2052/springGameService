@@ -1,6 +1,7 @@
-package org.jcd2052.api.dto;
+package org.jcd2052.api.dto.output;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@Schema(
+        title = "Game review record response",
+        description = "Represents Game review information")
 public class GameReviewDto {
     private int id;
     private UserDto user;

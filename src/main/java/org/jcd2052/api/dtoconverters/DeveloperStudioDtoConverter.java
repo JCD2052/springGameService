@@ -1,6 +1,6 @@
 package org.jcd2052.api.dtoconverters;
 
-import org.jcd2052.api.dto.DeveloperStudioDto;
+import org.jcd2052.api.dto.output.DeveloperStudioDto;
 import org.jcd2052.api.entities.DeveloperStudio;
 import org.springframework.stereotype.Component;
 
