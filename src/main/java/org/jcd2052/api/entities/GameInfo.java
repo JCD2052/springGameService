@@ -34,17 +34,13 @@ public class GameInfo implements IEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
     @Column(name = "game_name", unique = true)
     private String gameName;
-
     @Column(name = "game_description")
     private String gameDescription;
-
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
-
     @OneToMany(mappedBy = "gameInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonBackReference

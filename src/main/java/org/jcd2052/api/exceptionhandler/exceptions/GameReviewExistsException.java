@@ -1,6 +1,6 @@
 package org.jcd2052.api.exceptionhandler.exceptions;
 
-import org.jcd2052.api.dto.GameReviewDto;
+import org.jcd2052.api.dto.output.GameReviewDto;
 
 public class GameReviewExistsException extends RuntimeException {
     public GameReviewExistsException(GameReviewDto gameReviewDto) {

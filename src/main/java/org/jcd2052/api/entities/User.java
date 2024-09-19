@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Generated;
+import org.jcd2052.api.constants.ApiConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class User implements IEntity {
     @Column(name = "time_created")
     @Generated
     @Temporal(value = TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
+    @DateTimeFormat(pattern = ApiConstants.APPLICATION_DATE_FORMAT)
     private LocalDateTime timeCreated;
     @NotNull
     @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)

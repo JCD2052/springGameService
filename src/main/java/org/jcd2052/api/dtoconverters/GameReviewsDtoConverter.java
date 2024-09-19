@@ -1,7 +1,7 @@
 package org.jcd2052.api.dtoconverters;
 
 import lombok.RequiredArgsConstructor;
-import org.jcd2052.api.dto.GameReviewDto;
+import org.jcd2052.api.dto.output.GameReviewDto;
 import org.jcd2052.api.entities.GameReview;
 import org.springframework.stereotype.Component;
 

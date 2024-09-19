@@ -1,6 +1,6 @@
 package org.jcd2052.api.exceptionhandler.exceptions;
 
-import org.jcd2052.api.dto.GameDto;
+import org.jcd2052.api.dto.output.GameDto;
 
 public class GameAlreadyExistedException extends RuntimeException {
     public GameAlreadyExistedException(GameDto gameDto) {

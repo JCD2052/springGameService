@@ -1,6 +1,6 @@
 package org.jcd2052.api.dtoconverters;
 
-import org.jcd2052.api.dto.GenreDto;
+import org.jcd2052.api.dto.output.GenreDto;
 import org.jcd2052.api.entities.Genre;
 import org.springframework.stereotype.Component;
 

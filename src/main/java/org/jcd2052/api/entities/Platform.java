@@ -26,7 +26,6 @@ public class Platform implements IEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
     @Column(name = "platform_name", unique = true)
     private String platformName;
 

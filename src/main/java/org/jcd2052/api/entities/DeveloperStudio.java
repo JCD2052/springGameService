@@ -26,7 +26,6 @@ public class DeveloperStudio implements IEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
     @Column(name = "studio_name", unique = true)
     private String studioName;
 
