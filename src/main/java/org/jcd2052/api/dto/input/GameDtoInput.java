@@ -18,8 +18,8 @@ import java.time.LocalDate;
 public class GameDtoInput extends GenericDto {
     private String name;
     private String gameDescription;
-    private int gameGenreId;
-    private int gameDeveloperStudioId;
-    private int platformId;
+    private long gameGenreId;
+    private long gameDeveloperStudioId;
+    private long platformId;
     private LocalDate gameReleaseDate;
 }

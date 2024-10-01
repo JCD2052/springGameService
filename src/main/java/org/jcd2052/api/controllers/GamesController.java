@@ -60,12 +60,12 @@ public class GamesController {
                             mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGames(
-            @RequestParam(required = false) Integer genGameId,
+            @RequestParam(required = false) Long genGameId,
             @RequestParam(required = false) String gameName,
-            @RequestParam(required = false) Integer gameId,
-            @RequestParam(required = false) Integer platformId,
-            @RequestParam(required = false) Integer genreId,
-            @RequestParam(required = false) Integer developerStudioId) {
+            @RequestParam(required = false) Long gameId,
+            @RequestParam(required = false) Long platformId,
+            @RequestParam(required = false) Long genreId,
+            @RequestParam(required = false) Long developerStudioId) {
         Game gameProbe = Game.createGameByIds(genGameId, gameName, gameId, platformId, genreId, developerStudioId);
         return ResponseFactory.createResponse(
                 gameDtoConverter.createDtoListFromEntities(gameService.fetchEntities(gameProbe)),
@@ -77,7 +77,7 @@ public class GamesController {
     @PostMapping(consumes = ApiConstants.APPLICATION_CONTENT_TYPE, produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> addGame(@RequestBody GameDtoInput input) {
         String gameName = input.getName();
-        int platformId = input.getPlatformId();
+        long platformId = input.getPlatformId();
         Optional<Game> gameExisted = gameService.isGameExisted(gameName, platformId);
 
         if (gameExisted.isEmpty()) {
@@ -110,7 +110,7 @@ public class GamesController {
     @Operation(summary = "Delete the certain game record")
     @Transactional
     @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{gameId}")
-    public ResponseEntity<BaseResponse> deleteGame(@PathVariable int gameId) {
+    public ResponseEntity<BaseResponse> deleteGame(@PathVariable long gameId) {
         Game gameToDelete = gameService.getGameByIdOrThrowError(gameId);
         GameInfo gameInfo = gameToDelete.getGameInfo();
         Set<Game> games = gameInfo.getGames();

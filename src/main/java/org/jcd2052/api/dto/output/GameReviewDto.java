@@ -2,6 +2,7 @@ package org.jcd2052.api.dto.output;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,11 +14,12 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@AllArgsConstructor
 @Schema(
         title = "Game review record response",
         description = "Represents Game review information")
 public class GameReviewDto extends GenericDto {
-    private int id;
+    private long id;
     private UserDto user;
     private GameDto game;
     private double score;

@@ -1,7 +1,7 @@
 package org.jcd2052.api.config;
 
 import lombok.RequiredArgsConstructor;
-import org.jcd2052.api.entities.UserRole;
+import org.jcd2052.api.entities.enums.UserRole;
 import org.jcd2052.api.jwt.JwtAuthenticationFilter;
 import org.jcd2052.api.services.UserDetailsService;
 import org.springframework.context.annotation.Bean;

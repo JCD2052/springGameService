@@ -13,7 +13,7 @@ public class DeveloperStudioService extends BaseService<DeveloperStudio> {
         super(repository);
     }
 
-    public DeveloperStudio findDeveloperStudioById(int studioId) {
+    public DeveloperStudio findDeveloperStudioById(long studioId) {
         return repository.findById(studioId).orElseThrow(() -> new DeveloperStudioNotFoundException(studioId));
     }
 }

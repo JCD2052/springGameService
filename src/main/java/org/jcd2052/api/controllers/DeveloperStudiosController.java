@@ -40,7 +40,7 @@ public class DeveloperStudiosController {
                     content = {@Content(schema = @Schema(implementation = DeveloperStudioDto.class),
                             mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     public ResponseEntity<BaseResponse> fetchStudios(
-            @RequestParam(required = false) Integer studioId,
+            @RequestParam(required = false) Long studioId,
             @RequestParam(required = false) String studioName) {
         DeveloperStudio developerStudioProbe = DeveloperStudio.createStudio(studioId, studioName);
         return ResponseFactory.createResponse(

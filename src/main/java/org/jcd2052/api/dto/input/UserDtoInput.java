@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.jcd2052.api.dto.GenericDto;
-import org.jcd2052.api.entities.UserRole;
+import org.jcd2052.api.entities.enums.UserRole;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

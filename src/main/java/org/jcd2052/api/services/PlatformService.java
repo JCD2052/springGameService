@@ -11,7 +11,7 @@ public class PlatformService extends BaseService<Platform> {
         super(repository);
     }
 
-    public Platform findPlatformByIdOrThrowError(int platformId) {
+    public Platform findPlatformByIdOrThrowError(long platformId) {
         return repository.findById(platformId).orElseThrow(() -> new PlatformNotFoundException(platformId));
     }
 }

@@ -25,11 +25,11 @@ public class Platform implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(name = "platform_name", unique = true)
     private String platformName;
 
-    public static Platform createPlatform(Integer platformId, String platformName) {
+    public static Platform createPlatform(Long platformId, String platformName) {
         return Platform.builder().id(platformId).platformName(platformName).build();
     }
 }

@@ -15,6 +15,6 @@ import org.jcd2052.api.dto.GenericDto;
         title = "Developer studio record response",
         description = "Represents Developer studio information")
 public class DeveloperStudioDto extends GenericDto {
-    private int id;
+    private long id;
     private String developerStudioName;
 }

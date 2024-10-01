@@ -11,7 +11,7 @@ public class GameGenreService extends BaseService<Genre> {
         super(repository);
     }
 
-    public Genre findGameGenreByIdOrThrowError(int genreId) {
+    public Genre findGameGenreByIdOrThrowError(long genreId) {
         return repository.findById(genreId).orElseThrow(() -> new GameGenreNotFoundException(genreId));
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,17 +17,17 @@ public class GameService extends BaseService<Game> {
     }
 
     @Override
-    public Collection<Game> fetchEntities(Game probe) {
+    public List<Game> fetchEntities(Game probe) {
         return super.fetchEntities(Example.of(
                 probe,
                 ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)));
     }
 
-    public Game getGameByIdOrThrowError(int gameId) {
+    public Game getGameByIdOrThrowError(long gameId) {
         return repository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
     }
 
-    public Optional<Game> isGameExisted(String gameName, int platformId) {
+    public Optional<Game> isGameExisted(String gameName, long platformId) {
         return ((GameRepository) repository).findGameByGameInfoGameNameAndPlatformId(gameName, platformId);
     }
 }

@@ -13,11 +13,11 @@ public class GameReviewsService extends BaseService<GameReview> {
         super(repository);
     }
 
-    public Optional<GameReview> findGameReviewByGameIdAndReviewerUserId(int gameId, int reviewUserId) {
+    public Optional<GameReview> findGameReviewByGameIdAndReviewerUserId(long gameId, long reviewUserId) {
         return ((GameReviewsRepository) repository).findGameReviewByGameIdAndReviewerUserId(gameId, reviewUserId);
     }
 
-    public GameReview findReviewByIdOrThrowError(int reviewId) {
+    public GameReview findReviewByIdOrThrowError(long reviewId) {
         return repository.findById(reviewId).orElseThrow(() -> new GameReviewNotFoundException(reviewId));
     }
 

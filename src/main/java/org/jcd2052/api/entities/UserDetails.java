@@ -1,6 +1,8 @@
 package org.jcd2052.api.entities;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jcd2052.api.entities.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Arrays;
@@ -8,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
     private final User user;
 

@@ -1,16 +1,14 @@
 package org.jcd2052.api.dto.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.jcd2052.api.dto.GenericDto;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 @Schema(
         name = "Auth Input",
         description = "Parameters required to receive auth token",

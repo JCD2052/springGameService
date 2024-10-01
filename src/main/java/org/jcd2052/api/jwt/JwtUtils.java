@@ -16,10 +16,10 @@ import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class JwtService {
+@Component
+public class JwtUtils {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 

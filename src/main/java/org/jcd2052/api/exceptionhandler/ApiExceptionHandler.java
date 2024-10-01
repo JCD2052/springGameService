@@ -10,6 +10,8 @@ import org.jcd2052.api.exceptionhandler.exceptions.GameReviewExistsException;
 import org.jcd2052.api.exceptionhandler.exceptions.GameReviewNotFoundException;
 import org.jcd2052.api.exceptionhandler.exceptions.GameReviewScoreException;
 import org.jcd2052.api.exceptionhandler.exceptions.PlatformNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.PostCommentNotFoundException;
+import org.jcd2052.api.exceptionhandler.exceptions.PostNotFoundExecution;
 import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.exceptionhandler.exceptions.UserNotFoundException;
 import org.jcd2052.api.repsonses.BaseResponse;
@@ -42,6 +44,16 @@ public class ApiExceptionHandler {
             return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.FORBIDDEN);
         }
         return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BaseResponse> handlePostNotFoundExecution(PostNotFoundExecution exception) {
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BaseResponse> handlePostCommentNotFoundException(PostCommentNotFoundException exception) {
+        return ResponseFactory.createResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

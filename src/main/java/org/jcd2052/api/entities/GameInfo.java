@@ -33,7 +33,7 @@ public class GameInfo implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(name = "game_name", unique = true)
     private String gameName;
     @Column(name = "game_description")
