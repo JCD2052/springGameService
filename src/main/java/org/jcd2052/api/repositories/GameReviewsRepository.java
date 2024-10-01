@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface GameReviewsRepository extends JpaRepository<GameReview, Integer> {
-    Optional<GameReview> findGameReviewByGameIdAndReviewerUserId(int gameId, int reviewUserId);
+public interface GameReviewsRepository extends JpaRepository<GameReview, Long> {
+    Optional<GameReview> findGameReviewByGameIdAndReviewerUserId(long gameId, long reviewUserId);
 }

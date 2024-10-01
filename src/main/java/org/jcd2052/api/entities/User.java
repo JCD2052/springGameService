@@ -1,5 +1,6 @@
 package org.jcd2052.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,9 +21,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Generated;
 import org.jcd2052.api.constants.ApiConstants;
+import org.jcd2052.api.entities.enums.UserRole;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,9 +41,9 @@ public class User implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
     @NotNull
-    @Column(name = "username", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "username", nullable = false)
     private String username;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
@@ -50,15 +53,23 @@ public class User implements IEntity {
     @DateTimeFormat(pattern = ApiConstants.APPLICATION_DATE_FORMAT)
     private LocalDateTime timeCreated;
     @NotNull
-    @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "password")
     private String password;
     @NotNull
-    @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "email", nullable = false)
     private String email;
     @OneToMany(mappedBy = "reviewerUser")
     private Set<GameReview> gameReviews;
+    @OneToMany(mappedBy = "postUser")
+    @ToString.Exclude
+    @JsonBackReference
+    private Set<Post> posts = new LinkedHashSet<>();
+    @ToString.Exclude
+    @JsonBackReference
+    @OneToMany(mappedBy = "commentUser")
+    private Set<PostComment> postComments = new LinkedHashSet<>();
 
-    public static User createUser(Integer userId, String userName, String email, String userRole) {
+    public static User createUser(Long userId, String userName, String email, String userRole) {
         User user = new User();
         user.setId(userId);
         user.setUsername(userName);

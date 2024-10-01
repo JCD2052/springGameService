@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public interface IEntity {
-    Integer getId();
+    Long getId();
 
     default boolean areObjectFieldsEmpty() {
         return Arrays.stream(this.getClass().getDeclaredFields()).allMatch(field -> {

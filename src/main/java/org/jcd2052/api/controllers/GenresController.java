@@ -40,7 +40,7 @@ public class GenresController {
                             mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<List<GenreDto>> fetchGenres(
-            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Long genreId,
             @RequestParam(required = false) String genreName) {
         Genre genreProbe = Genre.createGameGenre(genreId, genreName);
         return ResponseEntity.ok(

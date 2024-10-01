@@ -25,11 +25,11 @@ public class DeveloperStudio implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(name = "studio_name", unique = true)
     private String studioName;
 
-    public static DeveloperStudio createStudio(Integer studioId, String studioName) {
+    public static DeveloperStudio createStudio(Long studioId, String studioName) {
         return DeveloperStudio.builder()
                 .id(studioId)
                 .studioName(studioName)

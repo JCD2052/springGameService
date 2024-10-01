@@ -4,19 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jcd2052.api.auth.IAuthenticationFacade;
 import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.entities.User;
 import org.jcd2052.api.dto.input.UserDtoInput;
 import org.jcd2052.api.dtoconverters.UserDtoConverter;
-import org.jcd2052.api.entities.UserDetails;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.exceptionhandler.exceptions.UserAlreadyCreatedException;
 import org.jcd2052.api.services.UserService;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,11 +37,12 @@ public class UsersController {
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
     private final PasswordEncoder passwordEncoder;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Operation(summary = "Fetch users records")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchUsers(
-            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String userRole) {
@@ -55,7 +54,7 @@ public class UsersController {
 
     @Operation(summary = "Fetch the certain user record")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{id}")
-    public ResponseEntity<BaseResponse> getUserById(@PathVariable("id") int userId) {
+    public ResponseEntity<BaseResponse> getUserById(@PathVariable("id") long userId) {
         return ResponseFactory.createResponse(
                 userDtoConverter.convertToDto(userService.findByIdOrThrowError(userId)),
                 HttpStatus.OK);
@@ -64,11 +63,9 @@ public class UsersController {
     @Operation(summary = "Fetch the authenticated user record")
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/me")
     public ResponseEntity<BaseResponse> getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails authenticatedUser = (UserDetails) authentication.getPrincipal();
         return ResponseFactory.createResponse(
                 userDtoConverter.convertToDto(userService.findUserByNameOrEmailOrThrowError(
-                        authenticatedUser.getUsername(),
+                        authenticationFacade.getAuthenticatedUser().getUsername(),
                         StringUtils.EMPTY)),
                 HttpStatus.OK);
     }
@@ -99,7 +96,7 @@ public class UsersController {
             consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
             produces = ApiConstants.APPLICATION_CONTENT_TYPE,
             value = "/{userId}")
-    public ResponseEntity<BaseResponse> updateUser(@PathVariable int userId, @RequestBody UserDtoInput input) {
+    public ResponseEntity<BaseResponse> updateUser(@PathVariable long userId, @RequestBody UserDtoInput input) {
         String username = Optional.ofNullable(input.getUsername()).orElse(StringUtils.EMPTY);
         String email = Optional.ofNullable(input.getEmail()).orElse(StringUtils.EMPTY);
 
@@ -124,7 +121,7 @@ public class UsersController {
             consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
             produces = ApiConstants.APPLICATION_CONTENT_TYPE,
             value = "/{userId}")
-    public ResponseEntity<BaseResponse> deleteUserById(@PathVariable int userId) {
+    public ResponseEntity<BaseResponse> deleteUserById(@PathVariable long userId) {
         User user = userService.findByIdOrThrowError(userId);
         userService.delete(user);
         return ResponseFactory.createResponse(

@@ -15,6 +15,6 @@ import org.jcd2052.api.dto.GenericDto;
         title = "Game platform record response",
         description = "Represents Game platform information")
 public class PlatformDto extends GenericDto {
-    private int id;
+    private long id;
     private String platformName;
 }

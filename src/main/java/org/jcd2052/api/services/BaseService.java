@@ -5,16 +5,16 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public abstract class BaseService<T extends IEntity> {
-    protected final JpaRepository<T, Integer> repository;
+    protected final JpaRepository<T, Long> repository;
 
-    protected BaseService(JpaRepository<T, Integer> repository) {
+    protected BaseService(JpaRepository<T, Long> repository) {
         this.repository = repository;
     }
 
-    public Collection<T> fetchEntities(T probe) {
+    public List<T> fetchEntities(T probe) {
         return fetchEntities(Example.of(probe));
     }
 
@@ -26,7 +26,7 @@ public abstract class BaseService<T extends IEntity> {
         repository.delete(entity);
     }
 
-    protected Collection<T> fetchEntities(Example<T> example) {
+    protected List<T> fetchEntities(Example<T> example) {
         return example.getProbe().areObjectFieldsEmpty() ? new ArrayList<>() : repository.findAll(example);
     }
 }

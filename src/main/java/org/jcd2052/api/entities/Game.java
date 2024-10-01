@@ -36,7 +36,7 @@ public class Game implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "game_info_id")
     private GameInfo gameInfo;
@@ -54,12 +54,12 @@ public class Game implements IEntity {
     private Set<GameReview> gameReviews;
 
     public static Game createGameByIds(
-            Integer genGameId,
+            Long genGameId,
             String gameName,
-            Integer gameId,
-            Integer platformId,
-            Integer genreId,
-            Integer developerStudioId) {
+            Long gameId,
+            Long platformId,
+            Long genreId,
+            Long developerStudioId) {
         Game game = new Game();
         game.setId(gameId);
         Optional.ofNullable(platformId).ifPresent(id -> game.setPlatform(Platform.builder().id(id).build()));

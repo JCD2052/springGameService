@@ -25,12 +25,12 @@ public class Genre implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "genre_name", unique = true)
     private String genreName;
 
-    public static Genre createGameGenre(Integer genreId, String genreName) {
+    public static Genre createGameGenre(Long genreId, String genreName) {
         return Genre.builder()
                 .id(genreId)
                 .genreName(genreName)

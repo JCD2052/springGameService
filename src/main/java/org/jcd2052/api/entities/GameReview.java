@@ -20,6 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Generated;
 import org.jcd2052.api.constants.ApiConstants;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ public class GameReview implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "game_id", nullable = false)
@@ -50,7 +51,7 @@ public class GameReview implements IEntity {
     @Column(name = "score", nullable = false)
     private Double score;
     @NotNull
-    @Column(name = "review_comment", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "review_comment", nullable = false)
     private String reviewComment;
     @Column(name = "time_created", nullable = false)
     @Generated
@@ -58,15 +59,15 @@ public class GameReview implements IEntity {
     @DateTimeFormat(pattern = ApiConstants.APPLICATION_DATE_FORMAT)
     private LocalDateTime timeCreated;
     @Column(name = "time_updated", nullable = false)
-    @Generated
+    @LastModifiedDate
     @Temporal(value = TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = ApiConstants.APPLICATION_DATE_FORMAT)
     private LocalDateTime timeUpdated;
 
     public static GameReview createGameReviewFromIds(
-            Integer reviewId,
-            Integer userId,
-            Integer gameId) {
+            Long reviewId,
+            Long userId,
+            Long gameId) {
         GameReview gameReview = new GameReview();
         gameReview.setId(reviewId);
         Optional.ofNullable(gameId).ifPresent(id -> gameReview.setGame(Game.builder().id(id).build()));

@@ -61,9 +61,9 @@ public class GameReviewController {
                     content = {@Content(mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     @GetMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE)
     public ResponseEntity<BaseResponse> fetchGameReviews(
-            @RequestParam(required = false) Integer reviewId,
-            @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) Integer gameId) {
+            @RequestParam(required = false) Long reviewId,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long gameId) {
         GameReview gameReviewProbe = GameReview.createGameReviewFromIds(reviewId, userId, gameId);
         return ResponseFactory.createResponse(
                 gameReviewsDtoConverter.createDtoListFromEntities(
@@ -78,8 +78,8 @@ public class GameReviewController {
         Double score = input.getScore();
         validateScore(score);
 
-        int gameId = input.getGameId();
-        int userReviewerId = input.getUserReviewerId();
+        long gameId = input.getGameId();
+        long userReviewerId = input.getUserReviewerId();
 
         Optional<GameReview> gameReviewByGameIdAndReviewerUserId =
                 gameReviewsService.findGameReviewByGameIdAndReviewerUserId(gameId, userReviewerId);
@@ -107,7 +107,7 @@ public class GameReviewController {
             consumes = ApiConstants.APPLICATION_CONTENT_TYPE,
             value = "/{reviewId}")
     public ResponseEntity<BaseResponse> updateReview(
-            @PathVariable int reviewId,
+            @PathVariable long reviewId,
             @RequestBody GameReviewDtoUpdateInput input) {
         GameReview gameReview = gameReviewsService.findReviewByIdOrThrowError(reviewId);
         Double score = input.getScore();
@@ -124,7 +124,7 @@ public class GameReviewController {
     @Operation(summary = "Delete the certain game review")
     @Transactional
     @DeleteMapping(produces = ApiConstants.APPLICATION_CONTENT_TYPE, value = "/{reviewId}")
-    public ResponseEntity<BaseResponse> deleteReview(@PathVariable int reviewId) {
+    public ResponseEntity<BaseResponse> deleteReview(@PathVariable long reviewId) {
         GameReview gameReview = gameReviewsService.findReviewByIdOrThrowError(reviewId);
         gameReviewsService.delete(gameReview);
         return ResponseFactory.createResponse(

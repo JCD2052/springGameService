@@ -11,7 +11,7 @@ public class UserService extends BaseService<User> {
         super(repository);
     }
 
-    public User findByIdOrThrowError(int userId) {
+    public User findByIdOrThrowError(long userId) {
         return repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 

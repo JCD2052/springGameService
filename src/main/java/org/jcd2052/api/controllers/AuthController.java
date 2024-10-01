@@ -12,7 +12,7 @@ import org.jcd2052.api.constants.ApiConstants;
 import org.jcd2052.api.constants.JwtConstants;
 import org.jcd2052.api.dto.output.AuthTokenDto;
 import org.jcd2052.api.dto.input.AuthDtoInput;
-import org.jcd2052.api.jwt.JwtService;
+import org.jcd2052.api.jwt.JwtUtils;
 import org.jcd2052.api.repsonses.BaseResponse;
 import org.jcd2052.api.repsonses.ResponseFactory;
 import org.jcd2052.api.services.UserDetailsService;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
 
     @Operation(summary = "Authenticate user")
     @ApiResponses({
@@ -53,10 +53,10 @@ public class AuthController {
                 input.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(input.getUsername());
 
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtUtils.generateToken(userDetails);
         AuthTokenDto authTokenDto = AuthTokenDto.builder()
                 .token(String.join(StringUtils.SPACE, JwtConstants.BEARER, token))
-                .expiresIn(jwtService.getExpirationTime())
+                .expiresIn(jwtUtils.getExpirationTime())
                 .build();
         return ResponseFactory.createResponse(authTokenDto, HttpStatus.OK);
     }

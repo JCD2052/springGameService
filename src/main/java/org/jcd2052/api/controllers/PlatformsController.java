@@ -41,7 +41,7 @@ public class PlatformsController {
                             implementation = PlatformDto.class),
                             mediaType = ApiConstants.APPLICATION_CONTENT_TYPE)})})
     public ResponseEntity<BaseResponse> fetchPlatforms(
-            @RequestParam(required = false) Integer platformId,
+            @RequestParam(required = false) Long platformId,
             @RequestParam(required = false) String platformName) {
         Platform platformProbe = Platform.createPlatform(platformId, platformName);
         return ResponseFactory.createResponse(
